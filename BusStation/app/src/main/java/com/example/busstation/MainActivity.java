@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void openSignUp(){
-        Intent intent = new Intent(this,SignUpActivity.class);
+        Intent intent = new Intent(this,HomeNavigation.class);
         startActivity(intent);
     }
     public void openHome(){
