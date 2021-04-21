@@ -31,6 +31,11 @@ public class Dashboard extends AppCompatActivity {
         HomeNavigation.redirectActivity(this,HomeNavigation.class);
     }
 
+    public void ClickSearchBus(View view){
+        HomeNavigation.openDrawer(drawerLayout);
+        HomeNavigation.redirectActivity(this,SearchBus.class);
+    }
+
     public void ClickDashBoard(View view){
         recreate();
     }
@@ -38,6 +43,11 @@ public class Dashboard extends AppCompatActivity {
     public void ClickAboutUs(View view){
         HomeNavigation.openDrawer(drawerLayout);
         HomeNavigation.redirectActivity(this,AboutUs.class);
+    }
+
+    public void ClickSetUp(View view){
+        HomeNavigation.openDrawer(drawerLayout);
+        HomeNavigation.redirectActivity(this,AccountSetting.class);
     }
 
     public void ClickLogout(View view){

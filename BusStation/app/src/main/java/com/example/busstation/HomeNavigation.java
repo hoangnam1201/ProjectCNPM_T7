@@ -49,12 +49,18 @@ public class HomeNavigation extends AppCompatActivity {
         recreate();
     }
 
+    public void ClickSearchBus(View view){ redirectActivity(this,SearchBus.class); }
+
     public void ClickDashBoard(View view){
         redirectActivity(this,Dashboard.class);
     }
 
-    public void ClickAbout(View view){
+    public void ClickAboutUs(View view){
         redirectActivity(this,AboutUs.class);
+    }
+
+    public void ClickSetUp(View view) {
+        redirectActivity(this,AccountSetting.class);
     }
 
     public void ClickLogout(View view){

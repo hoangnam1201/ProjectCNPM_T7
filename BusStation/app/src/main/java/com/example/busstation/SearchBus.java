@@ -6,15 +6,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.os.Bundle;
 import android.view.View;
 
-public class AboutUs extends AppCompatActivity {
+public class SearchBus extends AppCompatActivity {
     DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about_us);
+        setContentView(R.layout.activity_search_bus);
 
         drawerLayout=findViewById(R.id.drawer_layout);
     }
+
     public void ClickMenu(View view){
         HomeNavigation.openDrawer(drawerLayout);
     }
@@ -29,8 +30,7 @@ public class AboutUs extends AppCompatActivity {
     }
 
     public void ClickSearchBus(View view){
-        HomeNavigation.openDrawer(drawerLayout);
-        HomeNavigation.redirectActivity(this,SearchBus.class);
+        recreate();
     }
 
     public void ClickDashBoard(View view){
@@ -39,7 +39,8 @@ public class AboutUs extends AppCompatActivity {
     }
 
     public void ClickAboutUs(View view){
-        recreate();
+        HomeNavigation.openDrawer(drawerLayout);
+        HomeNavigation.redirectActivity(this,AboutUs.class);
     }
 
     public void ClickSetUp(View view){

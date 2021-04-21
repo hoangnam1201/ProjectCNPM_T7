@@ -41,11 +41,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void openSignUp(){
-        Intent intent = new Intent(this,HomeNavigation.class);
+        Intent intent = new Intent(this,SignUpActivity.class);
         startActivity(intent);
     }
     public void openHome(){
-        Intent intent = new Intent(this,HomeActivity.class);
+        Intent intent = new Intent(this,HomeNavigation.class);
         startActivity(intent);
     }
 }
