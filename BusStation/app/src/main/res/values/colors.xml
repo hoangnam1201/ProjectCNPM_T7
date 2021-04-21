@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="bar_green">#62dec1</color>
     <color name="line">#d9dddc</color>
+    <color name="bar">#fafafa</color>
 </resources>

@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.App">
-        <activity android:name=".SearchBus"></activity>
+        <activity android:name=".SearchBus" />
         <activity android:name=".AccountSetting" />
         <activity android:name=".Dashboard" />
         <activity android:name=".AboutUs" />
