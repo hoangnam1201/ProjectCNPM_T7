@@ -41,12 +41,14 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/edtUsernamelg"
             android:drawableLeft="@drawable/ic_baseline_account_circle_24"
             android:hint="Username"
             android:drawablePadding="10dp"
             android:layout_width="match_parent"
             android:layout_height="60dp"/>
         <EditText
+            android:id="@+id/edtPasswordlg"
             android:drawableRight="@drawable/ic_baseline_remove_red_eye_24"
             android:drawableLeft="@drawable/ic_baseline_vpn_key_24"
             android:hint="Password"
@@ -55,9 +57,8 @@
             android:drawablePadding="10dp"
             android:layout_height="60dp"/>
         <TextView
-            android:layout_marginTop="15dp"
-            android:gravity="right"
-            android:text="Forgot password"
+            android:id="@+id/tvErrorlg"
+            android:textColor="#E57373"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>

@@ -37,23 +37,23 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/edtFullName"
             android:hint="Full name"
             android:layout_width="match_parent"
             android:layout_height="50dp"/>
         <EditText
-            android:hint="Phone Number"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"/>
-        <EditText
+            android:id="@+id/edtEmail"
             android:hint="Email"
             android:layout_width="match_parent"
             android:layout_height="50dp"/>
         <EditText
+            android:id="@+id/edtUsername"
             android:hint="Username"
             android:drawablePadding="10dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"/>
         <EditText
+            android:id="@+id/edtPassword"
             android:drawableRight="@drawable/ic_baseline_remove_red_eye_24"
             android:hint="Password"
             android:inputType="textPassword"
@@ -61,12 +61,19 @@
             android:drawablePadding="10dp"
             android:layout_height="50dp"/>
         <EditText
+            android:id="@+id/edtRepeatPassword"
             android:drawableRight="@drawable/ic_baseline_remove_red_eye_24"
             android:hint="Repeat Password"
             android:inputType="textPassword"
             android:layout_width="match_parent"
             android:drawablePadding="10dp"
             android:layout_height="50dp"/>
+        <TextView
+            android:layout_marginTop="30sp"
+            android:id="@+id/tvError"
+            android:layout_width="match_parent"
+            android:textColor="#E57373"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <TextView

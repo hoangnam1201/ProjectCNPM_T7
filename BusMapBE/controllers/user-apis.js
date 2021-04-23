@@ -72,6 +72,7 @@ module.exports = (app) => {
     app.post('/api/users', (req, res) => {
         console.log(req)
         const newUser = {
+            fullname: req.body.fullname,
             email: req.body.email,
             username: req.body.username,
             password: SHA256(req.body.password),

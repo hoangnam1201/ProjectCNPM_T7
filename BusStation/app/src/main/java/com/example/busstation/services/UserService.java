@@ -1,0 +1,34 @@
+package com.example.busstation.services;
+
+import com.example.busstation.models.User;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+
+public interface UserService {
+    @GET("user-login/{username}/{password}")
+    Call<User> getUser(
+            @Path("username") String username,
+            @Path("password") String password);
+
+    @GET("user-username/{username}")
+    Call<Boolean> checkExistUsername(@Path("username") String username);
+
+    @GET("user-email/{email}")
+    Call<Boolean> checkExistEmail(@Path("email") String email);
+
+    @FormUrlEncoded
+    @POST("users")
+    Call<List<User>> createUser(
+            @Field("fullname") String fullname,
+            @Field("username") String username,
+            @Field("email") String email,
+            @Field("password") String password
+    );
+}
