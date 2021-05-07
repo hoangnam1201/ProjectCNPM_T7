@@ -56,11 +56,28 @@
             android:layout_width="match_parent"
             android:drawablePadding="10dp"
             android:layout_height="60dp"/>
-        <TextView
-            android:id="@+id/tvErrorlg"
-            android:textColor="#E57373"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:visibility="invisible"
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvErrorlg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#E57373"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
 
@@ -73,6 +90,7 @@
         android:text="LOGIN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    
     <TextView
         android:id="@+id/tv_signup"
         android:gravity="right"
