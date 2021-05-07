@@ -28,6 +28,15 @@ module.exports = (app) => {
         })
     })
 
+    app.post('/api/user',(req,res)=>{
+        User.findById(req.body.id,(err, user)=>{
+            if(err)
+            return res.json(err)
+            return res.json(user)
+            
+        })
+    })
+
     app.get('/api/user-email/:email', (req, res) => {
         User.findOne({ email: req.params.email }, (err, user) => {
             if (err)
@@ -38,8 +47,8 @@ module.exports = (app) => {
         })
     })
 
-    app.get('/api/user-login/:username/:password', (req, res) => {
-        User.findOne({ username: req.params.username, password: SHA256(req.params.password).toString() }, (err, user) => {
+    app.post('/api/user-login', (req, res) => {
+        User.findOne({ username: req.body.username, password: SHA256(req.body.password).toString() }, (err, user) => {
             if (err) {
                 res.status(500).json(err)
             } else {
@@ -48,8 +57,8 @@ module.exports = (app) => {
         })
     })
 
-    app.get('/api/user-loginEmail/:email/:password', (req, res) => {
-        User.findOne({ email: req.params.email, password: SHA256(req.params.password).toString() }, (err, user) => {
+    app.post('/api/user-loginEmail', (req, res) => {
+        User.findOne({ email: req.body.email, password: SHA256(req.body.password).toString() }, (err, user) => {
             if (err) {
                 res.status(500).json(err)
             } else {
@@ -58,8 +67,8 @@ module.exports = (app) => {
         })
     })
 
-    app.get('/api/user/:username/:password', (req, res) => {
-        User.findOne({ username: req.params.username, password: SHA256(req.params.password) }, (err, user) => {
+    app.post('/api/user-checkpassword', (req, res) => {
+        User.findOne({ username: req.body.username, password: SHA256(req.body.password) }, (err, user) => {
             if (err || user == null) {
                 res.json(false)
             } else (
@@ -132,6 +141,5 @@ module.exports = (app) => {
 
         })
     })
-
 
 }

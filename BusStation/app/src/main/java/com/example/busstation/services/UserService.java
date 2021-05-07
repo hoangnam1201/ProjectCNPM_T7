@@ -12,11 +12,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface UserService {
-    @GET("user-login/{username}/{password}")
-    Call<User> getUser(
-            @Path("username") String username,
-            @Path("password") String password);
-
     @GET("user-username/{username}")
     Call<Boolean> checkExistUsername(@Path("username") String username);
 
@@ -29,6 +24,13 @@ public interface UserService {
             @Field("fullname") String fullname,
             @Field("username") String username,
             @Field("email") String email,
+            @Field("password") String password
+    );
+
+    @FormUrlEncoded
+    @POST("user-login")
+    Call<User> login(
+            @Field("username") String username,
             @Field("password") String password
     );
 }

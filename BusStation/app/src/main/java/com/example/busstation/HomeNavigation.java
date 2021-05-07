@@ -7,8 +7,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.example.busstation.models.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -33,25 +36,25 @@ public class HomeNavigation extends AppCompatActivity {
 
     ArrayAdapter<String> arrayAdapter;
 
+    public static SharedPreferences sharedpreferences;
+    public static SharedPreferences.Editor editor;
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_navigation);
 
+        //shared preferences
+        sharedpreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE);
+        editor = sharedpreferences.edit();
+
+        //anh xa
         anhxa();
 
+        //google map
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.myMap);
-
         mapFragment.getMapAsync(this::onMapReady);
-
-        ListView listView = (ListView) findViewById(R.id.my_list);
-        List<String> mylist = new ArrayList<>();
-        mylist.add("Bus 56");
-        mylist.add("Bus 6");
-
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mylist);
-        listView.setAdapter(arrayAdapter);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,7 +78,7 @@ public class HomeNavigation extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public  void onMapReady(GoogleMap googleMap)
+    public void onMapReady(GoogleMap googleMap)
     {
         map = googleMap;
         LatLng ute = new LatLng(10.856622070058867, 106.77260894553581);
@@ -119,6 +122,7 @@ public class HomeNavigation extends AppCompatActivity {
 
     public void ClickAboutUs(View view){
         redirectActivity(this,AboutUs.class);
+
     }
 
     public void ClickSetUp(View view) {
@@ -129,15 +133,18 @@ public class HomeNavigation extends AppCompatActivity {
         logout(this);
     }
 
-    public static void logout(Activity activity) {
+    public static void  logout(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Log out");
         builder.setMessage("Are you sure want to log out ?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                activity.finishAffinity();
-                System.exit(0);
+//                activity.finishAffinity();
+//                System.exit(0);
+                editor.clear();
+                editor.commit();
+                redirectActivity(activity, MainActivity.class);
             }
         });
 
@@ -147,7 +154,6 @@ public class HomeNavigation extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
         builder.show();
     }
 
