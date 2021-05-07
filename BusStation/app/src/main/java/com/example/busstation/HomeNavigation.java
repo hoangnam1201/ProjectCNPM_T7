@@ -1,16 +1,22 @@
 package com.example.busstation;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,20 +26,30 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.example.busstation.models.User;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeNavigation extends AppCompatActivity {
+public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallback,
+        GoogleApiClient.OnConnectionFailedListener {
 
     DrawerLayout drawerLayout;
     GoogleMap map;
-
+    Location myLocation = null;
+    Location destinationLocation = null;
+    protected LatLng start = null;
+    protected LatLng end = null;
+    private final static int LOCATION_REQUEST_CODE = 23;
+    boolean locationPermission = false;
     ArrayAdapter<String> arrayAdapter;
 
     public static SharedPreferences sharedpreferences;
@@ -51,10 +67,67 @@ public class HomeNavigation extends AppCompatActivity {
 
         //anh xa
         anhxa();
-
+        requestPermision();
         //google map
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.myMap);
         mapFragment.getMapAsync(this::onMapReady);
+    }
+
+    private void requestPermision() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    LOCATION_REQUEST_CODE);
+        } else {
+            locationPermission = true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_REQUEST_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //if permission granted.
+                    locationPermission = true;
+                    getMyLocation();
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
+    }
+
+    //to get user location
+    private void getMyLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        map.setMyLocationEnabled(true);
+        map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+
+                myLocation=location;
+                LatLng ltlng=new LatLng(location.getLatitude(),location.getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+                        ltlng, 16f);
+                map.animateCamera(cameraUpdate);
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,11 +154,12 @@ public class HomeNavigation extends AppCompatActivity {
     public void onMapReady(GoogleMap googleMap)
     {
         map = googleMap;
-        LatLng ute = new LatLng(10.856622070058867, 106.77260894553581);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ute,20));
-        googleMap.addMarker(new MarkerOptions()
-                .position(ute)
-                .title("Đại học Sư Phạm Kỹ Thuật TP.HCM"));
+//        LatLng ute = new LatLng(10.856622070058867, 106.77260894553581);
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ute,20));
+//        googleMap.addMarker(new MarkerOptions()
+//                .position(ute)
+//                .title("Đại học Sư Phạm Kỹ Thuật TP.HCM"));
+        getMyLocation();
     }
 
     private void anhxa() {
@@ -169,5 +243,10 @@ public class HomeNavigation extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         closeDrawer(drawerLayout);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
