@@ -14,6 +14,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
+        <include
+            android:id="@+id/loadingLayout"
+            android:visibility="gone"
+            layout="@layout/activity_loading"/>
+
         <include
             layout="@layout/main_toolbar"/>
 
@@ -23,11 +29,12 @@
             android:orientation="horizontal">
 
             <fragment
+                xmlns:map="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/myMap"
                 android:name="com.google.android.gms.maps.MapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:layout="@android:layout/simple_gallery_item"/>
+                tools:layout="@android:layout/simple_gallery_item" />
 
             <ListView
                 android:layout_width="wrap_content"
@@ -37,7 +44,7 @@
         </LinearLayout>
 
     </LinearLayout>
-    
+
     <RelativeLayout
         android:layout_width="300dp"
         android:layout_height="match_parent"

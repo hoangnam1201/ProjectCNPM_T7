@@ -28,12 +28,12 @@ module.exports = (app) => {
         })
     })
 
-    app.post('/api/user',(req,res)=>{
-        User.findById(req.body.id,(err, user)=>{
-            if(err)
-            return res.json(err)
+    app.post('/api/user', (req, res) => {
+        User.findById(req.body.id, (err, user) => {
+            if (err)
+                return res.json(err)
             return res.json(user)
-            
+
         })
     })
 
@@ -132,6 +132,19 @@ module.exports = (app) => {
         })
     })
 
+    app.put('/api/user/:id', (req, res) => {
+        User.findOneAndUpdate({ _id: req.params.id },
+            { email: req.body.email, fullname: req.body.fullname, username: req.body.username },
+            { new: true },
+            (err, user) => {
+            if (err) {
+                res.json(err)
+            } else {
+                res.json(user)
+            }
+        })
+    })
+
     app.delete('/api/users/:id', (req, res) => {
         User.deleteOne({ _id: req.params.id }, (err, user) => {
             if (err) {
@@ -141,5 +154,6 @@ module.exports = (app) => {
 
         })
     })
+
 
 }

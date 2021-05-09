@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.busstation.models.User;
+import com.example.busstation.services.RetrofitService;
 import com.example.busstation.services.UserService;
 
 import java.io.IOException;
@@ -35,8 +36,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    Retrofit retrofit;
-    UserService userService;
     TextView login, tvError;
     ProgressBar progressBar;
 
@@ -54,13 +53,6 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         AnhXa();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://busapbe.herokuapp.com/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        userService = retrofit.create(UserService.class);
-
 
         login = (TextView) findViewById(R.id.tv_login);
 
@@ -96,8 +88,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void createUser() {
-        Call<Boolean> call = userService.checkExistUsername(edtUsername.getText().toString().trim());
-        call.enqueue(new Callback<Boolean>() {
+        RetrofitService.create(UserService.class).checkExistUsername(edtUsername.getText().toString().trim()).enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                 if (response.body()) {
@@ -106,9 +97,7 @@ public class SignUpActivity extends AppCompatActivity {
                     btnApply.setEnabled(true);
                     return;
                 }
-
-                Call<Boolean> calCheckExistEmail = userService.checkExistEmail(edtEmail.getText().toString().trim());
-                calCheckExistEmail.enqueue(new Callback<Boolean>() {
+                RetrofitService.create(UserService.class).checkExistEmail(edtEmail.getText().toString().trim()).enqueue(new Callback<Boolean>() {
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                         if (response.body()) {
@@ -117,13 +106,12 @@ public class SignUpActivity extends AppCompatActivity {
                             tvError.setText("Email already exist");
                             return;
                         }
-                        Call<List<User>> callCreateUser = userService.createUser(
+                        RetrofitService.create(UserService.class).createUser(
                                 edtFullName.getText().toString().trim(),
                                 edtUsername.getText().toString().trim(),
                                 edtEmail.getText().toString().trim(),
                                 edtPassword.getText().toString().trim()
-                        );
-                        callCreateUser.enqueue(new Callback<List<User>>() {
+                        ).enqueue(new Callback<List<User>>() {
                             @Override
                             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
 

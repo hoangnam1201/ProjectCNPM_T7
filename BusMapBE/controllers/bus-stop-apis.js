@@ -41,6 +41,25 @@ module.exports = (app) => {
 
         })
     })
+    app.put('api/busstops/:id',(req,res)=>{
+        const newBusStop = {
+            name: req.body.busstopName,
+            locationName: req.body.locationName,
+            latitude: req.body.latitube,
+            longitude: req.body.longitube,
+            buses: []
+        }
+        BusStop.findOneAndUpdate({_id:req.params.id},{name: newBusStop.name,
+            locationName: newBusStop.name,
+            latitude:req.body.latitube,
+            longitude: req.body.longitube},
+            {new: true},(err,busstop)=>{
+                if(err){
+                    return res.json(err)
+                }
+                return res.json(busstop)
+            })
+    })
     app.delete('/api/busstops/:id', (req, res) => {
         BusStop.findOneAndDelete({ _id: req.params.id }, (err, busStop) => {
             if (err) {

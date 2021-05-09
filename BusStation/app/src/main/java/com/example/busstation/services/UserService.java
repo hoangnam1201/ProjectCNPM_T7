@@ -33,4 +33,10 @@ public interface UserService {
             @Field("username") String username,
             @Field("password") String password
     );
+
+    @FormUrlEncoded
+    @POST("user")
+    Call<User> getUser(
+            @Field("id") String id
+    );
 }
