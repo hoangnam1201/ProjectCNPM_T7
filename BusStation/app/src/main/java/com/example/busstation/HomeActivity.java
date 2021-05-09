@@ -27,7 +27,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        HomeNavigation.info(this.findViewById(R.id.tvNameUser),this.findViewById(R.id.tvEmail));
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.myMap);
 
         mapFragment.getMapAsync(this::onMapReady);

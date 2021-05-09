@@ -43,39 +43,19 @@
                     <TextView
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        android:text="Họ:"
+                        android:text="Full name:"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"/>
 
                     <EditText
-                        android:text="Võ"
+                        android:id="@+id/edtFullname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="9"/>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="10">
-
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Tên:"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:text="Phú Đức"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="9"/>
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -91,33 +71,14 @@
                         android:layout_weight="1"/>
 
                     <EditText
-                        android:text="duc72@gmail.com"
+                        android:id="@+id/edtEmail"
+                        android:text=""
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="9"/>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="10">
-
-                    <TextView
-                        android:textStyle="bold"
-                        android:textSize="16sp"
-                        android:text="Giới tính:"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-
-                    <EditText
-                        android:text="Nam"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="9"/>
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -133,7 +94,8 @@
                         android:layout_weight="1"/>
 
                     <EditText
-                        android:text="duc72"
+                        android:id="@+id/edtUser"
+                        android:text=""
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="9"/>
@@ -151,7 +113,8 @@
                         android:text="Password:"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:layout_gravity="center"/>
 
 <!--                    <EditText-->
 <!--                        android:text="*********"-->
@@ -160,21 +123,13 @@
 <!--                        android:layout_weight="9"-->
 <!--                        />-->
 
-                    <com.google.android.material.textfield.TextInputLayout
+                    <Button
+                        android:id="@+id/btnChangePass"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:passwordToggleEnabled="true"
-                        android:layout_weight="9">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:inputType="textPassword"
-                            android:ems="15"
-                            android:text="abcadsasd"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
+                        android:text="Change Password"
+                        android:layout_gravity="center"
+                        android:padding="16sp"/>
                 </LinearLayout>
 
                 <RelativeLayout
@@ -193,7 +148,7 @@
                         android:text="Hủy" />
 
                     <Button
-                        android:id="@+id/btnAdd"
+                        android:id="@+id/btnSave"
                         android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="45dp"
@@ -230,6 +185,10 @@
 
     </LinearLayout>
 
+    <include layout="@layout/activity_loading"
+        android:id="@+id/loadingLayout"
+        android:visibility="gone"/>
+
     <RelativeLayout
         android:layout_width="300dp"
         android:layout_height="match_parent"
@@ -240,5 +199,7 @@
             layout="@layout/main_nav_drawer"/>
 
     </RelativeLayout>
+
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

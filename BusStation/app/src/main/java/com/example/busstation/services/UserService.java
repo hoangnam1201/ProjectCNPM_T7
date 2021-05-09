@@ -9,6 +9,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface UserService {
@@ -38,5 +39,14 @@ public interface UserService {
     @POST("user")
     Call<User> getUser(
             @Field("id") String id
+    );
+
+    @FormUrlEncoded
+    @PUT("user/{id}")
+    Call<User> ChangeInfo(
+      @Path("id") String id,
+      @Field("email") String email,
+      @Field("fullname") String fullname,
+      @Field("username") String username
     );
 }

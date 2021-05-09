@@ -27,12 +27,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.busstation.controllers.MapController;
+import com.example.busstation.controllers.SharedPreferencesController;
 import com.example.busstation.models.BusStop;
 import com.example.busstation.models.User;
 import com.example.busstation.services.BusStopService;
 import com.example.busstation.services.RetrofitService;
+import com.example.busstation.services.UserService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
@@ -50,6 +53,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener {
@@ -72,7 +76,7 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_navigation);
-
+        context = this;
         //shared preferences
         sharedpreferences = getSharedPreferences("myPref", Context.MODE_PRIVATE);
         editor = sharedpreferences.edit();
@@ -82,12 +86,31 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
         findViewById(R.id.imageView).startAnimation(animation);
         //anh xa
         anhxa();
+        info(this.findViewById(R.id.tvNameUser),this.findViewById(R.id.tvEmail));
         requestPermision();
         //google map
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.myMap);
         mapFragment.getMapAsync(this::onMapReady);
+
     }
 
+    public static void info(TextView nameUser, TextView emailUser){
+        RetrofitService.create(UserService.class).getUser(SharedPreferencesController.getStringValueByKey(context,"userAuthId")).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.body()==null){
+                    return;
+                }
+                nameUser.setText(response.body().getFullname());
+                emailUser.setText(response.body().getEmail());
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
+    }
     private void requestPermision() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
