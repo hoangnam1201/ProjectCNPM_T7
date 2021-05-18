@@ -246,7 +246,8 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
     }
 
     public void ClickSearchBus(View view) {
-        redirectActivity(this, SearchBus.class);
+       Intent i = new Intent(this,SearchBus.class);
+       startActivity(i);
     }
 
     public void ClickDashBoard(View view) {
