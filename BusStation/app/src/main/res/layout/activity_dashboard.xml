@@ -15,13 +15,114 @@
 
         <include
             layout="@layout/main_toolbar"/>
-        <TextView
+
+        <RelativeLayout
+            android:layout_margin="20sp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Do chuyen xe"
-            android:textSize="50sp"
-            android:textStyle="bold"
-            android:gravity="center"/>
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txtChon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Choose Location"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
+
+            <LinearLayout
+                android:layout_below="@+id/txtChon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+                    <ImageView
+                        android:background="@drawable/ic_loca"                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="2"/>
+                    <TextView
+                        android:text=" Việt Nam"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_weight="6"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@color/bar_green"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+                    <ImageView
+                        android:background="@drawable/vietnam"                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="2"/>
+                    <TextView
+                        android:textColor="@color/white"
+                        android:text=" Hồ Chí Minh"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_width="50dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="8"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@color/bar_green"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+                    <ImageView
+                        android:background="@drawable/vietnam"                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="2"/>
+                    <TextView
+                        android:textColor="@color/white"
+                        android:text=" Đà Nẵng"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_width="50dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="8"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@color/bar_green"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+                    <ImageView
+                        android:background="@drawable/vietnam"                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="2"/>
+                    <TextView
+                        android:textColor="@color/white"
+                        android:text=" Hà Nội"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_width="50dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="6"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
     </LinearLayout>
     
     <RelativeLayout

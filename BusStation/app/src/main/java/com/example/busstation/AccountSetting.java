@@ -2,16 +2,22 @@ package com.example.busstation;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.busstation.Sup.ChangePassword;
 import com.example.busstation.controllers.SharedPreferencesController;
 import com.example.busstation.models.User;
 import com.example.busstation.services.RetrofitService;
@@ -25,7 +31,7 @@ public class AccountSetting extends AppCompatActivity {
     DrawerLayout drawerLayout;
     EditText edtFullname, edtUserName, edtEmail;
     TextView tvName, tvEmail;
-
+    Button btnChangePass;
     View loading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +50,16 @@ public class AccountSetting extends AppCompatActivity {
         edtFullname = this.findViewById(R.id.edtFullname);
         edtUserName = this.findViewById(R.id.edtUser);
         edtEmail = this.findViewById(R.id.edtEmail);
-        tvName =this.findViewById(R.id.tvNameUser);
+        tvName = this.findViewById(R.id.tvNameUser);
+        btnChangePass = this.findViewById(R.id.btnChangePassWord);
+
+        btnChangePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AccountSetting.this, ChangePassword.class);
+                startActivity(intent);
+            }
+        });
 
         findViewById(R.id.btnSave).setOnClickListener(v->{
             ChangeInfo();
@@ -65,7 +80,6 @@ public class AccountSetting extends AppCompatActivity {
                 edtFullname.setText(response.body().getFullname());
                 edtEmail.setText(response.body().getEmail());
                 edtUserName.setText(response.body().getUsername());
-
                 loading.setVisibility(View.GONE);
 
 
