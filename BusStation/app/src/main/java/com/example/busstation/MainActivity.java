@@ -10,10 +10,14 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.busstation.controllers.SharedPreferencesController;
 import com.example.busstation.models.User;
@@ -28,10 +32,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView signup, signup2, tvError;
+    TextView signup, forgot, tvError;
     Button btnLogin;
     EditText edtUsername, edtPassword;
     ProgressBar progressBar;
+    CheckBox rememberme;
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
+    private Boolean saveLogin;
 
     @Override
     public void onBackPressed() {
@@ -45,15 +53,42 @@ public class MainActivity extends AppCompatActivity {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate_animation);
         findViewById(R.id.imageView).startAnimation(animation);
 
-        anhXa();
 
+        anhXa();
         checkUserID();
 
-
-        btnLogin.setOnClickListener(v -> onLogin());
+        //btnLogin.setOnClickListener(v -> onLogin());
         signup.setOnClickListener(v -> openSignUp());
-        signup2.setOnClickListener(v -> openSignUp());
+        forgot.setOnClickListener(v -> openForgot());
 
+        //Ghi nhớ tài tài khoan
+        btnLogin.setOnClickListener(this::onClick);
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+        saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        if (saveLogin == true) {
+            edtUsername.setText(loginPreferences.getString("username", ""));
+            edtPassword.setText(loginPreferences.getString("password", ""));
+            rememberme.setChecked(true);}
+    }
+    //Ghi nhớ TK
+    public void onClick(View view) {
+        if (view == btnLogin) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edtUsername.getWindowToken(), 0);
+            String username = edtUsername.getText().toString();
+            String password = edtPassword.getText().toString();
+            if (rememberme.isChecked()) {
+                loginPrefsEditor.putBoolean("saveLogin", true);
+                loginPrefsEditor.putString("username", username);
+                loginPrefsEditor.putString("password", password);
+                loginPrefsEditor.commit();
+            } else {
+                loginPrefsEditor.clear();
+                loginPrefsEditor.commit();
+            }
+            onLogin();
+        }
     }
 
     public void checkUserID() {
@@ -84,12 +119,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void anhXa() {
         signup = findViewById(R.id.tv_signup);
-        signup2 = findViewById(R.id.tv_signup2);
         btnLogin = findViewById(R.id.btn_login);
         edtUsername = findViewById(R.id.edtUsernamelg);
         edtPassword = findViewById(R.id.edtPasswordlg);
         tvError = findViewById(R.id.tvErrorlg);
         progressBar = this.findViewById(R.id.progressBar);
+        rememberme = findViewById(R.id.remeber);
+        forgot = findViewById(R.id.forgotpass);
     }
 
     public void openSignUp() {
@@ -122,5 +158,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void openForgot() {
+        Intent intent = new Intent(this, ForgotPasword.class);
+        startActivity(intent);
     }
 }
