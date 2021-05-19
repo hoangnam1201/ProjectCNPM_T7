@@ -49,4 +49,18 @@ public interface UserService {
       @Field("fullname") String fullname,
       @Field("username") String username
     );
+
+    @FormUrlEncoded
+    @POST("user-checkpassword")
+    Call<Boolean> CheckPassword(
+           @Field("id") String id,
+           @Field("password") String password
+    );
+
+    @FormUrlEncoded
+    @PUT("/api/user-password/{id}")
+    Call<User> ChangePassword(
+            @Path("id") String id,
+            @Field("password") String password
+    );
 }
