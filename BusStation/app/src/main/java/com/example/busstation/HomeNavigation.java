@@ -165,26 +165,6 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
         });
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.my_menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.search_icon);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Search Here!!");
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                arrayAdapter.getFilter().filter(newText);
-
-                return true;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
-    }
 
     public void onMapReady(GoogleMap googleMap) {
         try {
@@ -249,7 +229,10 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
        Intent i = new Intent(this,SearchBus.class);
        startActivity(i);
     }
-
+    public void clickSearchRoute(View view){
+            Intent i = new Intent(this,SearchRoute.class);
+        startActivity(i);
+    }
     public void ClickDashBoard(View view) {
         redirectActivity(this, Dashboard.class);
     }

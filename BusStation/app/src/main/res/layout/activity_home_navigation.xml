@@ -23,7 +23,7 @@
         <include
             layout="@layout/main_toolbar"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -36,12 +36,34 @@
                 android:layout_height="match_parent"
                 tools:layout="@android:layout/simple_gallery_item" />
 
-            <ListView
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/my_list"/>
+                android:background="@color/white"
+                android:padding="10dp"
+                android:layout_marginTop="500sp"
+                android:layout_marginLeft="10dp"
+                >
+                <ImageButton
+                    android:id="@+id/btnSearchRoute"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_search_1"
+                    android:scaleType="fitCenter"
+                    android:onClick="clickSearchRoute"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tìm đường"
+                    android:layout_toRightOf="@+id/btnSearchRoute"
+                    android:gravity="center"
+                    android:onClick="clickSearchRoute"
+                    android:layout_marginTop="10dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

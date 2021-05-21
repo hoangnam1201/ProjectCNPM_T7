@@ -32,34 +32,8 @@ public class HomeActivity extends AppCompatActivity {
 
         mapFragment.getMapAsync(this::onMapReady);
 
-        ListView listView = (ListView) findViewById(R.id.my_list);
-        List<String> mylist = new ArrayList<>();
-        mylist.add("Bus 56");
-        mylist.add("Bus 6");
-
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mylist);
-        listView.setAdapter(arrayAdapter);
     }
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.my_menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.search_icon);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Search Here!!");
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                arrayAdapter.getFilter().filter(newText);
-
-                return true;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
-    }
 
     public  void onMapReady(GoogleMap googleMap)
     {
