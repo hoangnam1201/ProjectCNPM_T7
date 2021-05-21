@@ -22,6 +22,7 @@ public class SearchBus extends AppCompatActivity {
     ArrayList<Buses> arrayBuses;
     BusAdapter adapter;
     SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
