@@ -103,7 +103,7 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
         info(this.findViewById(R.id.tvNameUser), this.findViewById(R.id.tvEmail));
         requestPermision();
         //test direction api
-        place1 = new LatLng(10.850858365517317, 106.77197594527688);
+        place1 = new LatLng(10.77350707042723, 106.70641602692451);
         place2 = new LatLng(10.947964488200222, 106.82867741206697);
         //google map
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.myMap);
@@ -144,9 +144,9 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
         map.clear();
         map.addMarker(new MarkerOptions()
                 .position(place1)
-                .title("Bệnh viện ITO") );
+                .title("Bến xe Bạch Đằng") );
         map.addMarker(new MarkerOptions()
-                .position(place1)
+                .position(place2)
                 .title("Trường Đại Họ Sư Phạm Kỹ Thuật") );
         currentPolyline = map.addPolyline((PolylineOptions) values[0]);
         currentPolyline.setColor(R.color.black);
@@ -349,6 +349,25 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
             GoogleLocationService.getAddress(SharedPreferencesController.getStringValueByKey(getApplicationContext(),"origin"),getApplicationContext(),new GeoHandler());
             String url = getUrl(place1,place2,"driving");
             new FetchURL(this).execute(url, "driving");
+            RetrofitService.create(BusStopService.class).getAllBusStops().enqueue(new Callback<List<BusStop>>() {
+                @Override
+                public void onResponse(Call<List<BusStop>> call, Response<List<BusStop>> response) {
+
+                    List<BusStop> busStopList = response.body();
+                    for (BusStop busStop : busStopList) {
+                        if (!busStop.getName().equals("point"))
+                            MapController.AddMarker(getApplicationContext(), map, busStop.getName(), busStop.getLocationName(), new LatLng(busStop.getLatitude(), busStop.getLongitude()));
+                    }
+
+//                findViewById(R.id.loadingLayout).setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFailure(Call<List<BusStop>> call, Throwable t) {
+
+                }
+            });
+
         }
     }
 

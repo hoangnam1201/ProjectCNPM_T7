@@ -114,19 +114,9 @@ public class ChangePassword extends AppCompatActivity {
                     }
                 });
 
-//                Toast toast = Toast.makeText(ChangePassword.this, "Saved", Toast.LENGTH_SHORT);
-//                toast.setGravity(Gravity.CENTER, 0, 0);
-//                toast.show();
+
             }
         });
-
-//        btnok.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
-
     }
 
     public void onBackPressed() {
