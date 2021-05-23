@@ -1,5 +1,6 @@
 package com.example.busstation.services;
 
+import com.example.busstation.models.Buses_Favorite;
 import com.example.busstation.models.User;
 
 import java.util.List;
@@ -63,4 +64,16 @@ public interface UserService {
             @Path("id") String id,
             @Field("password") String password
     );
+
+    @FormUrlEncoded
+    @PUT("users-addFavoriteBuses/{id}")
+    Call<List<Buses_Favorite>> addFavorite(@Path("id") String id, @Field("idBuses") String idBuses);
+
+
+    @FormUrlEncoded
+    @PUT("users-deleteFavoriteBuses/{id}")
+    Call<List<Buses_Favorite>> DeleteFavorite(@Path("id") String id, @Field("idBuses") String idBuses);
+
+    @POST("user-favoriteBuses/{id}")
+    Call<List<Buses_Favorite>> GetFavorite(@Path("id") String id);
 }

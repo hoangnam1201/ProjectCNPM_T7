@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
+                    btnLogin.setVisibility(View.VISIBLE);
                     findViewById(R.id.loadingLayout).setVisibility(View.GONE);
                 }
             });
@@ -155,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 tvError.setText("Error! An error occurred. Please try again later");
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 

@@ -25,13 +25,12 @@
         android:layout_below="@+id/textViewMaSo"/>
 
     <ImageView
-        android:id="@+id/Like"
+        android:id="@+id/imgLike"
         android:textSize="16dp"
         android:textStyle="bold"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/heart"
         android:layout_toRightOf="@+id/textViewMaSo"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"

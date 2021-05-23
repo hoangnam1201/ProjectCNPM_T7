@@ -20,8 +20,31 @@
             android:visibility="gone"
             layout="@layout/activity_loading"/>
 
-        <include
-            layout="@layout/main_toolbar"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical"
+            android:background="@color/bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="ClickMenu"
+                android:src="@drawable/ic_action_menu"/>
+            <ImageView
+                android:id="@+id/btnSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="40sp"
+                android:src="@drawable/ic_search_1"
+                android:paddingRight="10sp"
+                android:paddingLeft="10sp" />
+            <AutoCompleteTextView
+                android:id="@+id/searchView"
+                android:hint="search bus station"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"/>
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

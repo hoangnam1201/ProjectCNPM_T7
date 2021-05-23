@@ -22,6 +22,15 @@ public class SharedPreferencesController {
         editor.putString(key,value);
         editor.commit();
     }
+    public static Boolean getBooleanValueByKey(Context context, String key){
+        return getSharedPreferences(context).getBoolean(key, false);
+    }
+
+    public static void setBooleanValue(Context context, String key, Boolean value){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putBoolean(key,value);
+        editor.commit();
+    }
     public static void clear(Context context){
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.clear();

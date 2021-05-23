@@ -4,37 +4,64 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.busstation.controllers.BusAdapter;
+import com.example.busstation.controllers.SharedPreferencesController;
+import com.example.busstation.models.BusStop;
 import com.example.busstation.models.Buses;
+import com.example.busstation.models.Buses_Favorite;
+import com.example.busstation.models.Buses_id;
+import com.example.busstation.services.BusStopService;
+import com.example.busstation.services.BusesService;
+import com.example.busstation.services.RetrofitService;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchBus extends AppCompatActivity {
     DrawerLayout drawerLayout;
 
     ListView lvBus;
-    ArrayList<Buses> arrayBuses;
+    List<Buses_Favorite> arrayBuses;
     BusAdapter adapter;
     SearchView searchView;
-
+    List<String> arrComplete;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_bus);
-        anhxa();
         HomeNavigation.info(this.findViewById(R.id.tvNameUser),this.findViewById(R.id.tvEmail));
+        Log.d("kiemtra","init");
+        anhxa();
         drawerLayout=findViewById(R.id.drawer_layout);
-        adapter =new BusAdapter(this,R.layout.activity_list_bus,arrayBuses);
-        lvBus.setAdapter(adapter);
+//        adapter =new BusAdapter(this,R.layout.activity_list_bus,arrayBuses);
+//        lvBus.setAdapter(adapter);
         filterSearchView();
+        lvBus.setOnItemLongClickListener((adapterView, view, i, l)->{
+            SharedPreferencesController.setBooleanValue(this, "myPositionl", false);
+            SharedPreferencesController.setStringValue(this, "modeFollow", "buses");
+            SharedPreferencesController.setStringValue(this, "followIdItem", arrayBuses.get(i).getBuses().get_id().toString());
+            Intent intent = new Intent(this, HomeNavigation.class);
+            startActivity(intent);
+            return true;
+        });
 
     }
+
+
     private void filterSearchView(){
         searchView = (SearchView) findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -53,12 +80,24 @@ public class SearchBus extends AppCompatActivity {
     private void anhxa(){
         lvBus = (ListView) findViewById(R.id.lvBuses);
         arrayBuses = new ArrayList<>();
-        arrayBuses.add(new Buses(R.drawable.bus_station,"06","GTVT-Chợ Lớn"));
-        arrayBuses.add(new Buses(R.drawable.bus_station,"01","DHqg-Bến Thành"));
-        arrayBuses.add(new Buses(R.drawable.bus_station,"02","BX miền tây-Chợ Lớn"));
-        arrayBuses.add(new Buses(R.drawable.bus_station,"03","DH SPKT-Chợ Lớn"));
-        arrayBuses.add(new Buses(R.drawable.bus_station,"04","KTX Khu B-BX Miền Đông"));
-        arrayBuses.add(new Buses(R.drawable.bus_station,"05","GTVT-Chợ Lớn"));
+
+        Log.d("kiemtra1", "onResponse ---: " + "sssssss");
+        Log.d("kiemtra1", "onResponse ---: " + SharedPreferencesController.getStringValueByKey(getApplicationContext(),"userAuthId"));
+        RetrofitService.create(BusesService.class).GetBusesFavorite(SharedPreferencesController.getStringValueByKey(getApplicationContext(),"userAuthId")).enqueue(new Callback<List<Buses_Favorite>>() {
+            @Override
+            public void onResponse(Call<List<Buses_Favorite>> call, Response<List<Buses_Favorite>> response) {
+                Log.d("kiemtra1", "onResponse ---: " + response.body().size());
+                arrayBuses = response.body();
+                adapter =new BusAdapter(getApplicationContext(),R.layout.activity_list_bus,arrayBuses);
+                lvBus.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Buses_Favorite>> call, Throwable t) {
+                Log.d("kiemtra1", "onFailure: " + t.getMessage());
+            }
+        });
+
     }
 
 

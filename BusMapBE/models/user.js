@@ -5,7 +5,8 @@ const userShema = new mongoose.Schema({
     email: String,
     username: String,
     password: String,
-    role: String
+    role: String,
+    favoriteBuses: [{ type: mongoose.Types.ObjectId, ref: 'buses'}]
 }, { collection: 'user' })
 
 const User = mongoose.model('user', userShema)

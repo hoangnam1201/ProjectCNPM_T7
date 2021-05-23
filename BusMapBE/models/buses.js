@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 
 const busesSchema = mongoose.Schema({
+    id: String,
+    operatingTime: String, 
+    timeDistance: String,
     name: String,
     price: Number,
     seats: Number,
