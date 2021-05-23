@@ -14,3 +14,9 @@ do đó không cần chạy.
 - Sau khi đăng nhập thì giao diện home của app sẽ hiển thị với 1 bản đồ người dùng có thể bật định vị để lấy vị trí hiện tại của mình,
 các trạm xe bus đã được hiển thị trên bản đồ.
 - Vuốt màn hình từ trái sang phải hoặc bấm vào button sẽ hiện ra menu của App, trong menu người dùng có thể thực hiện logut tài khoản.
+
+- Khi người dùng muốn định vị cá nhận click vào button định vị trên map
+- Khi người dùng muốn tra cứu tuyến xe bus, click vào menu tìm muc search bus. Ở giao diện search bus nhập tên tuyến xe hoặc mã số
+- Khi người dùng muốn tìm đường click vào mục tìm đường có trên map. Ở giao diện tìm đường người dùng nhập vị trí đi và đến
+- Khi người dùng muốn coi danh sách tuyến xe yêu thích, click vào mục danh sach tuyến xe yêu thích ở menu
+- Khi người dùng muốn thay đổi thông tin cá nhân hoặc password, click vào mục account setting.
