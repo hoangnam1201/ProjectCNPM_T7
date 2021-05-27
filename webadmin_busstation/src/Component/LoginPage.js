@@ -17,73 +17,33 @@ const LoginPage = () => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
   };
   const submitHandle = async (e) => {
-    try {
-      e.preventDefault();
-      console.log(userInput);
-      const fetch = {
-        method: "post",
-        url: "https://busapbe.herokuapp.com/api/auth/login",
-        data: userInput,
-      };
-      const response = await axios(fetch);
-      console.log(response.data);
+    e.preventDefault();
+    console.log(userInput);
+    const fetch = {
+      method: "post",
+      url: "https://busapbe.herokuapp.com/api/auth/login",
+      data: userInput,
+    };
+    await axios(fetch).then(response => {
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      // dispatch({type: "CURRENT_USER",payload: {username}})
 
-      const fetch2 = {
-        method: "post",
-        url: "http://localhost:3002/api/users/get-infor",
-        Headers: {
-          authorization: localStorage.getItem("accessToken"),
-        },
-      };
-      console.log(fetch2);
-      axios(fetch2)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+      //get infor
+      axios({
+        method: 'post',
+        url: "https://busapbe.herokuapp.com/api/users/get-infor",
+        headers: { Authorization: "Token "+localStorage.getItem('accessToken') }, //header viet thuong
+      }).then(data => {
+        //if(data.role == 'admin') login() 
+        console.log(data.data)
+      }).catch(err => {
+        console.log(err)
+      })
 
-    // e.preventDefault();
-    // const fetch = {
-    //   method: "post",
-    //   url: "https://busapbe.herokuapp.com/api/auth/login",
-    //   data: userInput,
-    // };
-    // axios(fetch)
-    //   .then((response) => {
-    //     console.log(response);
-    //     const { accessToken, refreshToken } = response.data;
-    //     localStorage.setItem("accessToken", accessToken);
-    //     localStorage.setItem("refreshToken", refreshToken);
-
-    //     const fetch2 = {
-    //       method: "post",
-    //       url: "https://busapbe.herokuapp.com/api/users/get-infor",
-    //       Headers: {
-    //         Authorization:
-    //           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDgyZjA4ZDRhZmJhMTAwMjI2MDZmNjIiLCJpYXQiOjE2MjIxMzQ0NDMsImV4cCI6MTYyMjEzNDc0M30.Jsk16Fs41TfKSnc9ZpuSVGpYOGbT8qml5gYqCWsDrbA",
-    //       },
-    //     };
-    //     console.log(fetch2);
-    //     axios(fetch2)
-    //       .then((response) => {
-    //         console.log(response.data);
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    }).catch(err => {
+      console.log(err)
+    })
   };
 
   return (
@@ -108,9 +68,9 @@ const LoginPage = () => {
               name="username"
               value={userInput.username}
               onChange={onChangeHandle}
-              // value={username}
-              // onChange={e => setUsername(e.target.value)}
-              // error={error.username}
+            // value={username}
+            // onChange={e => setUsername(e.target.value)}
+            // error={error.username}
             />
             <TextField
               className="w-100 mt-3 mb-2"
@@ -119,9 +79,9 @@ const LoginPage = () => {
               name="password"
               value={userInput.password}
               onChange={onChangeHandle}
-              // value={password}
-              // onChange={e => setPassword(e.target.value)}
-              // error={error.password}
+            // value={password}
+            // onChange={e => setPassword(e.target.value)}
+            // error={error.password}
             />
             {/* {error.message &&
                         <div className="alert alert-danger p-2 mt-2">
