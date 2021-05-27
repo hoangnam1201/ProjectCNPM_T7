@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Buses = require('../models/buses')
-const BusStop = require('./../models/bus-stop')
-const mapService = require('./../Services/MapService.js')
+const BusStop = require('../models/bus-stop')
+const mapService = require('../Services/MapService.js')
 const _mapService = new mapService()
 
 const getBusStops = (req, res) => {
@@ -14,64 +14,79 @@ const getBusStops = (req, res) => {
     })
 }
 
-module.exports = (app) => {
-    app.get('/api/busstops', (req, res) => {
+module.exports = function() {
+    this.getAll = async(req, res) => {
         console.log(_mapService.distanceBetweenPoint(10.99745994471673, 106.87185864560696, 10.997243690317715, 106.87850555965828))
         getBusStops(req, res)
-    })
-    app.get('/api/busstops/:id', (req, res) => {
+    }
+    this.getById = async(req, res) => {
         BusStop.findById(req.params.id).populate('buses').then(busstop => {
             res.json(busstop)
         }).catch(err => {
             res.json(err)
         })
-    })
-    app.get('/api/busstops-searchname', (req, res) => {
+    }
+    this.searchName = async(req, res) => {
         console.log(req.query.name)
         BusStop.findOne({ name: req.query.name }).populate('buses').then(busstop => {
             return res.json(busstop)
         }).catch(err => {
             return res.json(err)
         })
-    })
-    app.get('/api/busstops-getname', (req, res) => {
-        if (req.query.value === '' || !req.query.value) {
-            return res.json([])
-        }
+    }
+    this.getName = async (req, res) => {
+        if (!req.query.value || req.query.value == '') return res.json([])
         let value = req.query.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-        const regex = new RegExp(value, 'i')
-        BusStop.find({ name: { $regex: regex } }, (err, busStops) => {
-            if (err) return res.json(err)
-            let arrName = busStops.map(b => b.name)
-            let arr = [...new Set(arrName)].filter(b => !(b.indexOf('point') != -1))
-            return res.json(arr)
+        const regex = new RegExp(`^((?!${value}).)*$`, 'i')
+        BusStop.find({ name: { $regex: regex } }).distinct('name').exec((err, name) => {
+            if (err) return res.status(400).json(err)
+            BusStop.find({ locationName: { $regex: regex } }).distinct('locationName').exec((err, locationName) => {
+                if (err) return res.status(400).json(err)
+                return res.json([...name, ...locationName])
+            })
         })
-    })
+    }
 
-    app.get('/api/busstops-getAllname',(req, res)=>{
-        BusStop.find({}, (err, busStops) => {
-            if (err) return res.json(err)
-            let arrName = busStops.map(b => b.name)
-            let arr = [...new Set(arrName)].filter(b => !(b.indexOf('point') != -1))
-            return res.json(arr)
+    this.getAllName = async (req, res) => {
+        const regex = new RegExp('^((?!point).)*$')
+        BusStop.find({ name: { $regex: regex } }).distinct('name').exec((err, name) => {
+            if (err) return res.status(400).json(err)
+            BusStop.find({ locationName: { $regex: regex } }).distinct('locationName').exec((err, locationName) => {
+                if (err) return res.status(400).json(err)
+                return res.json([...name, ...locationName])
+            })
         })
 
-    })
+    }
 
-    app.get('/api/busstops-search', (req, res) => {
+    this.search = async (req, res) => {
         const regex = new RegExp(req.query.value, 'i')
         BusStop.findOne({ $or: [{ name: { $regex: regex } }, { locationName: { $regex: regex } }] }, (err, busStops) => {
             if (err) return res.json(err)
             return res.json(busStops)
         })
-    })
+    }
 
-    app.post('/api/busstops', (req, res) => {
+    this.getAround = async (req, res) => {
+        const regex = new RegExp('^((?!point).)*$')
+        const origin = req.body.origin
+        const dest = req.body.dest
+        mongoose.Aggregate
+        BusStop.find({ name: { $regex: regex } }).exec((err, busStops) => {
+            if (err) return res.json(err)
+            arr = busStops.filter(b => {
+                return _mapService.distanceBetweenPoint(origin.latitude, origin.longitude, b.latitude, b.longitude) < 1 || _mapService.distanceBetweenPoint(dest.latitude, dest.longitude, b.latitude, b.longitude)
+            })
+            return res.json(arr)
+        })
+    }
+
+    this.add = async (req, res) => {
         const newBusStop = {
             name: req.body.busstopName,
             locationName: req.body.locationName,
-            latitude: req.body.latitube,
-            longitude: req.body.longitube,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude,
             buses: []
         }
         BusStop.findOne({ name: newBusStop.name }, (err, busstop) => {
@@ -86,20 +101,20 @@ module.exports = (app) => {
 
             })
         })
-    })
-    app.put('api/busstops/:id', (req, res) => {
+    }
+    this.update = async (req, res) => {
         const newBusStop = {
             name: req.body.busstopName,
             locationName: req.body.locationName,
-            latitude: req.body.latitube,
-            longitude: req.body.longitube,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude,
             buses: []
         }
         BusStop.findOneAndUpdate({ _id: req.params.id }, {
             name: newBusStop.name,
             locationName: newBusStop.name,
-            latitude: req.body.latitube,
-            longitude: req.body.longitube
+            latitude: req.body.latitude,
+            longitude: req.body.longitude
         },
             { new: true }, (err, busstop) => {
                 if (err) {
@@ -107,9 +122,9 @@ module.exports = (app) => {
                 }
                 return res.json(busstop)
             })
-    })
+    }
 
-    app.delete('/api/busstops/:id', (req, res) => {
+    this.delete = (req, res) => {
         BusStop.findOneAndDelete({ _id: req.params.id }, (err, busStop) => {
             if (err) {
                 res.json(err)
@@ -122,5 +137,5 @@ module.exports = (app) => {
                     })
             }
         })
-    })
+    }
 }

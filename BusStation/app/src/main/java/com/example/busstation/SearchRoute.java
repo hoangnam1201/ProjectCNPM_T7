@@ -54,6 +54,7 @@ public class SearchRoute extends AppCompatActivity {
             currentFocus = editText2;
             SharedPreferencesController.setStringValue(this, "modeFollow", "router");
             SharedPreferencesController.setStringValue(this, "origin", editText1.getText().toString());
+            SharedPreferencesController.setStringValue(this, "dest", editText2.getText().toString());
             Intent i = new Intent(this, HomeNavigation.class);
             startActivity(i);
         });
