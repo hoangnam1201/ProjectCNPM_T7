@@ -4,7 +4,6 @@ import "./style.scss";
 import styled from "styled-components";
 import { Button, TextField } from "@material-ui/core";
 import AppContext from "./AppContext";
-import { useHistory } from "react-router";
 import axios from "axios";
 
 const Hr = styled.hr`
@@ -13,37 +12,40 @@ const Hr = styled.hr`
 const LoginPage = () => {
   const { dispatch } = useContext(AppContext);
   const [userInput, setUserInput] = useState({ username: "", password: "" });
+  const [errorMessage, setErrorMessage] = useState(null);
   const onChangeHandle = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
   };
   const submitHandle = async (e) => {
-    e.preventDefault();
-    console.log(userInput);
-    const fetch = {
-      method: "post",
-      url: "https://busapbe.herokuapp.com/api/auth/login",
-      data: userInput,
-    };
-    await axios(fetch).then(response => {
+    try {
+      e.preventDefault();
+      console.log(userInput);
+      const fetch = {
+        method: "post",
+        url: "https://busapbe.herokuapp.com/api/auth/login",
+        // url: "http://localhost:3002/api/auth/login",
+        data: userInput,
+      };
+      const response = await axios(fetch);
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-
-      //get infor
-      axios({
-        method: 'post',
+      //
+      const fetch2 = {
+        method: "post",
         url: "https://busapbe.herokuapp.com/api/users/get-infor",
-        headers: { Authorization: "Token "+localStorage.getItem('accessToken') }, //header viet thuong
-      }).then(data => {
-        //if(data.role == 'admin') login() 
-        console.log(data.data)
-      }).catch(err => {
-        console.log(err)
-      })
-
-    }).catch(err => {
-      console.log(err)
-    })
+        // url: "http://localhost:3002/api/users/get-infor",
+        headers: {
+          Authorization: "Token " + localStorage.getItem("accessToken"),
+        },
+      };
+      const respone2 = await axios(fetch2);
+      const { username } = respone2.data;
+      dispatch({ type: "CURRENT_USER", payload: { username } });
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.response.data.message);
+    }
   };
 
   return (
@@ -59,6 +61,14 @@ const LoginPage = () => {
             NHÓM SINH VIÊN SƯ PHẠM KỸ THUẬT TP HCM
           </small>
           <h6 className="mt-5">Thông tin đăng nhập:</h6>
+          {errorMessage &&
+            (Array.isArray(errorMessage) ? (
+              errorMessage.map((err) => (
+                <div className="error-message">Error: {err}</div>
+              ))
+            ) : (
+              <div className="error-message">Error: {errorMessage}</div>
+            ))}
           <form
           // onKeyDown={handleEnterKey}
           >
@@ -68,9 +78,6 @@ const LoginPage = () => {
               name="username"
               value={userInput.username}
               onChange={onChangeHandle}
-            // value={username}
-            // onChange={e => setUsername(e.target.value)}
-            // error={error.username}
             />
             <TextField
               className="w-100 mt-3 mb-2"
@@ -79,15 +86,8 @@ const LoginPage = () => {
               name="password"
               value={userInput.password}
               onChange={onChangeHandle}
-            // value={password}
-            // onChange={e => setPassword(e.target.value)}
-            // error={error.password}
             />
-            {/* {error.message &&
-                        <div className="alert alert-danger p-2 mt-2">
-                            {error.message}
-                        </div>
-                    } */}
+
             <Button
               fullWidth
               className="mt-2"

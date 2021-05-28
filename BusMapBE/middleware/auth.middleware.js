@@ -11,7 +11,7 @@ const verifyToken = async (req, res, next) => {
   console.log(req.headers);
   console.log(req.headers.authorization);
   try {
-    const token = req.headers.authorization;
+    const token = req.headers.authorization.split(" ")[1];
     const decoded = await jwtService.verifyToken(token, accessTokenSecret);
     req.userData = decoded;
     next();
@@ -22,6 +22,7 @@ const verifyToken = async (req, res, next) => {
 
 const verifyRefreshToken = async (req, res, next) => {
   const refreshToken = req.body.refreshToken;
+  console.log(refreshToken);
   if (!refreshToken)
     return res.status(403).json({
       message: "invalue refresh token",
