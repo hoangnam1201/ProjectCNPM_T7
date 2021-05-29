@@ -16,6 +16,7 @@ const Appbar = () => {
 
   const Logout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     dispatch({ type: "CURRENT_USER", payload: null });
     window.location.reload();
   };
