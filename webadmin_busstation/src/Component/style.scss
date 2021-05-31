@@ -249,8 +249,16 @@
         text-decoration: none;
         display: flex;
         list-style: none;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
         .user-name {
             font-weight: 500;
             margin-right: 15px;
         }
+    }
+    
+    .error-message {
+        color: #EC1C25;
+        font-weight: 600;
     }

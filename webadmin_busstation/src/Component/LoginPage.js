@@ -19,7 +19,7 @@ const LoginPage = () => {
   const submitHandle = async (e) => {
     try {
       e.preventDefault();
-      console.log(userInput);
+      // console.log(userInput);
       const fetch = {
         method: "post",
         url: "https://busapbe.herokuapp.com/api/auth/login",
@@ -30,6 +30,7 @@ const LoginPage = () => {
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      console.log(accessToken);
       //
       const fetch2 = {
         method: "post",
@@ -43,8 +44,8 @@ const LoginPage = () => {
       const { username } = respone2.data;
       dispatch({ type: "CURRENT_USER", payload: { username } });
     } catch (error) {
-      console.log(error);
-      setErrorMessage(error.response.data.message);
+      // console.log(error);
+      setErrorMessage(error.response.data.err);
     }
   };
 
