@@ -48,6 +48,9 @@ const LoginPage = () => {
       setErrorMessage(error.response.data.err);
     }
   };
+  const handleEnterKey = (e) => {
+    if (e.key === "Enter") submitHandle(e);
+  };
 
   return (
     <div className="login-page">
@@ -70,9 +73,7 @@ const LoginPage = () => {
             ) : (
               <div className="error-message">Error: {errorMessage}</div>
             ))}
-          <form
-          // onKeyDown={handleEnterKey}
-          >
+          <form onKeyDown={handleEnterKey}>
             <TextField
               className="w-100 mt-3"
               label="Tài khoản"
@@ -95,7 +96,7 @@ const LoginPage = () => {
               variant="contained"
               color="primary"
               // onClick={handleLogin}
-              // onKeyDown={handleEnterKey}
+              onKeyDown={handleEnterKey}
               // disabled={loading}
               onClick={submitHandle}
             >

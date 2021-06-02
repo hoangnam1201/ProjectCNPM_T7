@@ -28,7 +28,7 @@ const Appbar = () => {
       >
         <AiOutlineMenu />
       </IconButton>
-      <Link to="/">
+      <Link to="/home">
         <img src={logobus} alt="logo" height="50px" className="mx-3" />
       </Link>
       <div ref={menuRef} className="position-relative">
