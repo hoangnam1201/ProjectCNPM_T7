@@ -36,6 +36,26 @@ export default function reducer(state, action) {
         ...state,
         bus: state.bus.filter((bus) => bus._id !== action.payload._id),
       };
+    case "GET_ALL_BUSSTOPS":
+      return { ...state, busstop: action.payload };
+    case "CREATE_ONE_BUSSTOPS":
+      return { ...state, busstop: [...state.busstop, action.payload] };
+    case "UPDATE_ONE_BUSSTOPS":
+      return {
+        ...state,
+        busstop: state.busstop.map((busstop) =>
+          busstop._id === action.payload._id
+            ? { ...busstop, ...action.payload }
+            : busstop
+        ),
+      };
+    case "DELETE_ONE_BUSSTOPS":
+      return {
+        ...state,
+        busstop: state.busstop.filter(
+          (busstop) => busstop._id !== action.payload._id
+        ),
+      };
     default:
       return state;
   }

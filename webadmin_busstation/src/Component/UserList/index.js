@@ -44,12 +44,13 @@ const UserList = () => {
   const showListUser = () => {
     const userlist = state.posts;
     var result = null;
-    if (userlist.length > 0) {
+    if (userlist.length !== 0) {
       if (rowsPerPage > 0) {
-        userlist.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-        result = userlist.map((user) => {
-          return <Row key={user._id} user={user} />;
-        });
+        result = userlist
+          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          .map((user) => {
+            return <Row key={user._id} user={user} />;
+          });
       }
     }
     return result;

@@ -53,7 +53,7 @@ const MainPage = () => {
   );
 };
 function App() {
-  const initialState = { user: null, posts: [], bus: [] };
+  const initialState = { user: null, posts: [], bus: [], busstop: [] };
   const [state, dispatch] = useReducer(Reducer, initialState);
 
   // xac minh co dang dang nhap ko

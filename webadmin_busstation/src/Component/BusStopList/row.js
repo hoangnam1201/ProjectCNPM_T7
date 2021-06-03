@@ -14,49 +14,46 @@ import ConfirmDelete from "../common/ConfirmDeleteForm";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import EditIcon from "@material-ui/icons/Edit";
-const Row = ({ bus }) => {
+const Row = ({ busstop }) => {
   const { dispatch } = useContext(AppContext);
   const [openToEditForm, setOpenToEditForm] = useState(false);
-  const [busToEdit, setBusToEdit] = useState(bus);
+  const [busStopToEdit, setBusStopToEdit] = useState(busstop);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
   const toggleDrawer = (open) => (event) => {
     setOpenToEditForm(open);
   };
-  const updateBus = async () => {
+  const updateBusStop = async () => {
     try {
       const fetch = {
         method: "put",
-        url: `https://busapbe.herokuapp.com/api/buses/update/:${bus._id}`,
+        url: `https://busapbe.herokuapp.com/api/busstops/update/:${busstop._id}`,
         headers: {
           Authorization: "Token " + localStorage.getItem("accessToken"),
         },
-        data: busToEdit,
+        data: busStopToEdit,
       };
-      console.log(fetch);
-      const resopone = await axios(fetch);
-      console.log(resopone);
-      dispatch({ type: "UPDATE_ONE_BUS", payload: { ...busToEdit } });
+      await axios(fetch);
+      dispatch({ type: "UPDATE_ONE_BUSSTOPS", payload: { ...busStopToEdit } });
       setOpenToEditForm(false);
     } catch (err) {
-      setErrorMessage(err.resopone);
+      console.log(err);
     }
   };
   const handleDelete = () => {
     setDeleteDialog(true);
   };
-  const deleteBuses = async () => {
+  const deleteBusStops = async () => {
     try {
       const fetch = {
         method: "delete",
-        url: `https://busapbe.herokuapp.com/api/buses/delete/${bus._id}`,
+        url: `https://busapbe.herokuapp.com/api/busstops/delete/:${busstop._id}`,
         headers: {
           Authorization: "Token " + localStorage.getItem("accessToken"),
         },
       };
       await axios(fetch);
-      dispatch({ type: "DELETE_ONE_BUS", payload: { _id: bus._id } });
+      dispatch({ type: "DELETE_ONE_BUSSTOPS", payload: { _id: busstop._id } });
       setDeleting(false);
       setDeleteDialog(false);
     } catch (err) {
@@ -66,16 +63,16 @@ const Row = ({ bus }) => {
 
   const onDelete = async () => {
     setDeleting(true);
-    deleteBuses();
+    deleteBusStops();
   };
 
   return (
     <>
       <ConfirmDelete
         open={deleteDialog}
-        label="Chuyến xe"
-        warning="Xóa chuyến vĩnh viễn. Không thể khôi phục."
-        name={bus.name}
+        label="Trạm xe"
+        warning="Xóa trạm xe vĩnh viễn. Không thể khôi phục."
+        name={busstop.name}
         onClose={() => setDeleteDialog(false)}
         loading={deleting}
         onSubmit={onDelete}
@@ -87,80 +84,63 @@ const Row = ({ bus }) => {
       >
         <div className="detail-form__wrapper">
           <header className="detail-form__header">
-            <h5>Update chuyến xe</h5>
+            <h5>Update trạm xe</h5>
           </header>
-          {errorMessage &&
-            (Array.isArray(errorMessage) ? (
-              errorMessage.map((err) => (
-                <div className="error-message">Error: {err}</div>
-              ))
-            ) : (
-              <div className="error-message">Error: {errorMessage}</div>
-            ))}
           <form
           // onKeyDown={handleEnterKey}
           >
             <TextField
               className="w-100 mt-3"
-              label="ID"
-              name="id"
-              value={busToEdit.id}
-              onChange={(e) => {
-                setBusToEdit({ ...busToEdit, id: e.target.value });
-              }}
-            />
-            <TextField
-              className="w-100 mb-2"
-              label="Operating Time"
-              name="operatingTime"
-              value={busToEdit.operatingTime}
-              onChange={(e) => {
-                setBusToEdit({ ...busToEdit, operatingTime: e.target.value });
-              }}
-            />
-            <TextField
-              className="w-100 mb-2"
-              label="Time Distance"
-              name="timeDistance"
-              value={busToEdit.timeDistance}
-              onChange={(e) => {
-                setBusToEdit({ ...busToEdit, timeDistance: e.target.value });
-              }}
-            />
-            <TextField
-              className="w-100 mb-2"
               label="Name"
               name="name"
-              value={busToEdit.name}
+              value={busStopToEdit.name}
               onChange={(e) => {
-                setBusToEdit({ ...busToEdit, name: e.target.value });
+                setBusStopToEdit({ ...busStopToEdit, name: e.target.value });
               }}
             />
             <TextField
               className="w-100 mb-2"
-              label="Price"
-              name="price"
-              value={busToEdit.price}
+              label="Location Name"
+              name="locationName"
+              value={busStopToEdit.locationName}
               onChange={(e) => {
-                setBusToEdit({ ...busToEdit, price: e.target.value });
+                setBusStopToEdit({
+                  ...busStopToEdit,
+                  locationName: e.target.value,
+                });
               }}
             />
             <TextField
               className="w-100 mb-2"
-              label="Seats"
-              name="seats"
-              value={busToEdit.seats}
+              label="Latitude"
+              name="latitude"
+              value={busStopToEdit.latitude}
               onChange={(e) => {
-                setBusToEdit({ ...busToEdit, seats: e.target.value });
+                setBusStopToEdit({
+                  ...busStopToEdit,
+                  latitude: e.target.value,
+                });
               }}
             />
             <TextField
               className="w-100 mb-2"
-              label="Bus stop"
-              name="busstops"
-              value={busToEdit.busstops}
+              label="Longitude"
+              name="longitude"
+              value={busStopToEdit.longitude}
               onChange={(e) => {
-                setBusToEdit({ ...busToEdit, busstops: [e.target.value] });
+                setBusStopToEdit({
+                  ...busStopToEdit,
+                  longitude: e.target.value,
+                });
+              }}
+            />
+            <TextField
+              className="w-100 mb-2"
+              label="Buses"
+              name="buses"
+              value={busStopToEdit.buses}
+              onChange={(e) => {
+                setBusStopToEdit({ ...busStopToEdit, buses: [e.target.value] });
               }}
             />
 
@@ -169,7 +149,7 @@ const Row = ({ bus }) => {
               className="mt-2"
               variant="contained"
               color="primary"
-              onClick={updateBus}
+              onClick={updateBusStop}
             >
               Update
             </Button>
@@ -187,22 +167,16 @@ const Row = ({ bus }) => {
       </Drawer>
       <TableRow hover style={{ transform: "scale(1)" }}>
         <TableCell align="center" className="border-right">
-          {bus.id}
+          {busstop.name}
         </TableCell>
         <TableCell align="center" className="border-right">
-          {bus.operatingTime}
+          {busstop.locationName}
         </TableCell>
         <TableCell align="center" className="border-right">
-          {bus.timeDistance}
+          {busstop.latitude}
         </TableCell>
         <TableCell align="center" className="border-right">
-          {bus.name}
-        </TableCell>
-        <TableCell align="center" className="border-right">
-          {bus.price}
-        </TableCell>
-        <TableCell align="center" className="border-right">
-          {bus.seats}
+          {busstop.longitude}
         </TableCell>
         <TableCell align="center" className="border-right">
           <Button
@@ -216,7 +190,7 @@ const Row = ({ bus }) => {
         </TableCell>
         <TableCell align="center" className="border-right">
           <Button
-            onClick={() => handleDelete(bus._id)}
+            onClick={() => handleDelete(busstop._id)}
             color="secondary"
             variant="contained"
           >
