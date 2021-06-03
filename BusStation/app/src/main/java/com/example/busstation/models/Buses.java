@@ -3,6 +3,7 @@ package com.example.busstation.models;
 import java.util.List;
 
 public class Buses {
+
     String _id;
     String operatingTime;
     String timeDistance;
@@ -10,22 +11,14 @@ public class Buses {
     String name;
     int price;
     int seats;
-    List<BusStop> busstops;
+    List<String> busstops;
+    Boolean isFavorite;
 
-    public String getName() {
-        return name;
+    public void setFavorite(Boolean favorite) {
+        isFavorite = favorite;
     }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public int getSeats() {
-        return seats;
-    }
-
-    public List<BusStop> getBusstops() {
-        return busstops;
+    public Boolean getFavorite() {
+        return isFavorite;
     }
 
     public String get_id() {
@@ -44,7 +37,20 @@ public class Buses {
         return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getSeats() {
+        return seats;
+    }
+
+    public List<String> getBusstops() {
+        return busstops;
+    }
+
 }

@@ -4,6 +4,9 @@ import styled from "styled-components";
 import AppContext from "../AppContext";
 import addbus from "../assets/addbus1.png";
 import axios from "axios";
+import DeleteIcon from "@material-ui/icons/Delete";
+import UpIcon from "@material-ui/icons/ArrowUpward"
+import TimeLineIcon from "@material-ui/icons/Timeline"
 const Label = styled.label`
   font-size: 13px;
   font-weight: 600;
@@ -22,11 +25,23 @@ const BusForm = () => {
   });
   const [errorMessage, setErrorMessage] = useState(null);
   const [busStopName, setBusSTopName] = useState("");
-  const [busStops, setBusStop] = useState([]);
+  const [busStops, setBusStops] = useState([]);
 
-  const onChangeName = (e) => {
+  const onChangeName = async (e) => {
     setBusSTopName(e.target.value);
   };
+  const onMoveUp = async (e) => {
+    const busStopId = e.target.parentElement.getAttribute("busstopid")
+    if (!busStopId) return;
+    console.log(busStopId)
+    const index = busStops.findIndex(x => x.id == busStopId)
+    const temp = busStops
+    const busStop = temp.splice(index, 1)[0]
+    temp.splice(index - 1, 0, busStop)
+    console.log(temp)
+    setBusStops(temp)
+    setBusesInput({ ...busesInput, busstops: temp.map(b => b.id) })
+  }
   const onAddBusStop = async () => {
     const fetch = {
       method: "get",
@@ -41,25 +56,40 @@ const BusForm = () => {
     await axios(fetch)
       .then((response) => {
         if (response.status == 200 && response.data) {
-          console.log(response);
-          setBusStop([
+          console.log(response.data._id)
+          if (busStops.find(b => b.id === response.data._id)) {
+            console.log("this already exist")
+            return;
+          }
+          setBusStops([
             ...busStops,
             { id: response.data._id, name: response.data.name },
           ]);
           setBusesInput({
             ...busesInput,
-            busstops: busStops.map((b) => b.id),
+            busstops: [...busesInput.busstops, response.data._id],
           });
-          console.log(busesInput.busstops);
-          console.log(busStops);
         } else {
-          console.log(response.status);
+
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
+  const onDeleteBusStop = (e) => {
+    const busStopId = e.target.parentElement.getAttribute("busstopid")
+    if (!busStopId) return;
+    console.log(e.target.parentElement)
+    setBusStops(busStops.filter(b => {
+      return b.id != busStopId
+    }))
+    setBusesInput({ ...busesInput, busstops: busesInput.busstops.filter(b => b != busStopId) })
+  }
+  const onAddPoint = () => {
+    console.log(busesInput.busstops);
+    console.log(busStops);
+  }
   const onchangeHandle = (e) => {
     setBusesInput({ ...busesInput, [e.target.name]: e.target.value });
   };
@@ -68,7 +98,7 @@ const BusForm = () => {
     try {
       const fetch = {
         method: "post",
-        url: "https://busapbe.herokuapp.com/api/buses/add",
+        url: "https://localhost:3002/api/buses/add",
         headers: {
           Authorization: "Token " + localStorage.getItem("accessToken"),
         },
@@ -139,12 +169,23 @@ const BusForm = () => {
           <Button variant="contained" color="primary" onClick={onAddBusStop}>
             add bus stop
           </Button>
-          <Button variant="contained" color="primary">
-            add point
-          </Button>
-          {busStops.map((b) => {
-            return <p key={b.id}>{b.name}</p>;
-          })}
+          <div max-width="100px">
+            {busStops.map((b, index) => {
+              return <div className="d-flex py-3 border-bottom align-items-center" key={b.id} busstopid={b.id}>
+                <p className="w-75 m-0">{index}. {b.name}</p>
+                {index !== 0 ? <Button variant="contained" onClick={onMoveUp}>
+                  <UpIcon />
+                </Button>: <div></div>}
+
+                <Button variant="contained" role="button" onClick={onDeleteBusStop}>
+                  <DeleteIcon />
+                </Button>
+                <Button variant="contained" onClick={onAddPoint}>
+                  <TimeLineIcon />
+                </Button>
+              </div>
+            })}
+          </div>
         </div>
 
         <Button

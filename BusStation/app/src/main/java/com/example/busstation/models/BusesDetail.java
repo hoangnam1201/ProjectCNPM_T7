@@ -2,8 +2,7 @@ package com.example.busstation.models;
 
 import java.util.List;
 
-public class Buses_id {
-
+public class BusesDetail {
     String _id;
     String operatingTime;
     String timeDistance;
@@ -11,7 +10,23 @@ public class Buses_id {
     String name;
     int price;
     int seats;
-    List<String> busstops;
+    List<BusStop> busstops;
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getSeats() {
+        return seats;
+    }
+
+    public List<BusStop> getBusstops() {
+        return busstops;
+    }
 
     public String get_id() {
         return _id;
@@ -29,20 +44,7 @@ public class Buses_id {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setName(String name) {
+        this.name = name;
     }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public int getSeats() {
-        return seats;
-    }
-
-    public List<String> getBusstops() {
-        return busstops;
-    }
-
 }

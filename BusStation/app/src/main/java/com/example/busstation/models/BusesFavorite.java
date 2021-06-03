@@ -1,15 +1,15 @@
 package com.example.busstation.models;
 
 
-public class Buses_Favorite {
-    Buses_id buses;
+public class BusesFavorite {
+    Buses buses;
     Boolean isOwner;
 
-    public Buses_id getBuses() {
+    public Buses getBuses() {
         return buses;
     }
 
-    public void setBuses(Buses_id buses) {
+    public void setBuses(Buses buses) {
         this.buses = buses;
     }
 

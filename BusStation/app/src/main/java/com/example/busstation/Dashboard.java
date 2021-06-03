@@ -5,16 +5,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
 import com.example.busstation.controllers.BusAdapter;
 import com.example.busstation.controllers.SharedPreferencesController;
 import com.example.busstation.models.Buses;
-import com.example.busstation.models.Buses_Favorite;
-import com.example.busstation.models.Buses_id;
-import com.example.busstation.services.BusesService;
+import com.example.busstation.models.BusesFavorite;
 import com.example.busstation.services.RetrofitService;
 import com.example.busstation.services.UserService;
 
@@ -29,7 +26,7 @@ public class Dashboard extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     ListView lvFavo;
-    List<Buses_Favorite> arrayBuses;
+    List<Buses> arrayBuses;
     BusAdapter adapter;
 
     @Override
@@ -42,7 +39,7 @@ public class Dashboard extends AppCompatActivity {
         lvFavo.setOnItemLongClickListener((adapterView, view, i, l)->{
             SharedPreferencesController.setBooleanValue(this, "myPositionl", false);
             SharedPreferencesController.setStringValue(this, "modeFollow", "buses");
-            SharedPreferencesController.setStringValue(this, "followIdItem", arrayBuses.get(i).getBuses().get_id().toString());
+            SharedPreferencesController.setStringValue(this, "followIdItem", arrayBuses.get(i).get_id().toString());
             Intent intent = new Intent(this, HomeNavigation.class);
             startActivity(intent);
             return true;
@@ -52,16 +49,18 @@ public class Dashboard extends AppCompatActivity {
     private void anhxa(){
         lvFavo = (ListView) findViewById(R.id.lvFavo);
         arrayBuses = new ArrayList<>();
-        RetrofitService.create(UserService.class).GetFavorite(SharedPreferencesController.getStringValueByKey(this,"userAuthId")).enqueue(new Callback<List<Buses_Favorite>>() {
+        RetrofitService.create(UserService.class).GetFavorite("Token " + SharedPreferencesController.getStringValueByKey(this,"accessToken")).enqueue(new Callback<List<Buses>>() {
             @Override
-            public void onResponse(Call<List<Buses_Favorite>> call, Response<List<Buses_Favorite>> response) {
-                arrayBuses = response.body();
-                adapter =new BusAdapter(getApplicationContext(),R.layout.activity_list_bus,arrayBuses);
-                lvFavo.setAdapter(adapter);
+            public void onResponse(Call<List<Buses>> call, Response<List<Buses>> response) {
+                if(response.isSuccessful()){
+                    arrayBuses = response.body();
+                    adapter =new BusAdapter(getApplicationContext(),R.layout.activity_list_bus,arrayBuses,1);
+                    lvFavo.setAdapter(adapter);
+                }
             }
 
             @Override
-            public void onFailure(Call<List<Buses_Favorite>> call, Throwable t) {
+            public void onFailure(Call<List<Buses>> call, Throwable t) {
 
             }
         });

@@ -2,11 +2,11 @@ package com.example.busstation.models;
 
 import java.util.List;
 
-public class Busstop_Detail {
+public class BusstopDetail {
     String _id;
     String name, locationName;
     Double latitude, longitude;
-    List<Buses_id> buses;
+    List<Buses> buses;
 
     public String get_id() {
         return _id;
@@ -28,7 +28,7 @@ public class Busstop_Detail {
         return longitude;
     }
 
-    public List<Buses_id> getBuses() {
+    public List<Buses> getBuses() {
         return buses;
     }
 }

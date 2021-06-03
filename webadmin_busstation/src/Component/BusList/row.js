@@ -27,27 +27,20 @@ const Row = ({ bus }) => {
     try {
       const fetch = {
         method: "put",
-        url: `https://busapbe.herokuapp.com/api/buses/update/:${bus._id}`,
+        url: `http://localhost:3002/api/buses/update/${bus._id}`,
         headers: {
           Authorization: "Token " + localStorage.getItem("accessToken"),
         },
-        body: {
-          id: busToEdit.id,
-          operatingTime: busToEdit.operatingTime,
-          timeDistance: busToEdit.timeDistance,
-          name: busToEdit.name,
-          price: busToEdit.price,
-          seats: busToEdit.seats,
-          busstops: [busToEdit.busstops],
-        },
-        data: busToEdit,
+        data: busToEdit
       };
-      await axios(fetch);
+      console.log(fetch)
+      const resopone = await axios(fetch);
+      console.log(resopone)
       dispatch({ type: "UPDATE_ONE_BUS", payload: { ...busToEdit } });
       setOpenToEditForm(false);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch(err){
+      console.log(err.err)
+    }    
   };
   const handleDelete = () => {
     setDeleteDialog(true);
