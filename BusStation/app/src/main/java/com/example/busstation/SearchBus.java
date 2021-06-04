@@ -16,7 +16,6 @@ import com.example.busstation.controllers.BusAdapter;
 import com.example.busstation.controllers.SharedPreferencesController;
 import com.example.busstation.models.AccessToken;
 import com.example.busstation.models.Buses;
-import com.example.busstation.models.BusesFavorite;
 import com.example.busstation.services.BusesService;
 import com.example.busstation.services.RetrofitService;
 import com.example.busstation.services.UserService;

@@ -7,37 +7,38 @@ const _mapService = new mapService()
 const getBusStops = (req, res) => {
     BusStop.find({}, (err, busstops) => {
         if (err) {
-            res.json(err)
+            res.status(400).json(err)
         } else {
             res.json(busstops)
         }
     })
 }
 
-module.exports = function() {
-    this.getAll = async(req, res) => {
+module.exports = function () {
+    this.getAll = async (req, res) => {
         console.log(_mapService.distanceBetweenPoint(10.99745994471673, 106.87185864560696, 10.997243690317715, 106.87850555965828))
         getBusStops(req, res)
     }
-    this.getById = async(req, res) => {
+    this.getById = async (req, res) => {
         BusStop.findById(req.params.id).populate('buses').then(busstop => {
             res.json(busstop)
         }).catch(err => {
-            res.json(err)
+            res.status(400).json(err)
         })
     }
-    this.searchName = async(req, res) => {
+    this.searchName = async (req, res) => {
         console.log(req.query.name)
         BusStop.findOne({ name: req.query.name }).populate('buses').then(busstop => {
             return res.json(busstop)
         }).catch(err => {
-            return res.json(err)
+            return res.status(400).json(err)
         })
     }
     this.getName = async (req, res) => {
+        console.log('value :' + req.query.value)
         if (!req.query.value || req.query.value == '') return res.json([])
         let value = req.query.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-        const regex = new RegExp(`^((?!${value}).)*$`, 'i')
+        const regex = new RegExp(`${value}`, 'i')
         BusStop.find({ name: { $regex: regex } }).distinct('name').exec((err, name) => {
             if (err) return res.status(400).json(err)
             BusStop.find({ locationName: { $regex: regex } }).distinct('locationName').exec((err, locationName) => {
@@ -60,7 +61,8 @@ module.exports = function() {
     }
 
     this.search = async (req, res) => {
-        const regex = new RegExp(req.query.value, 'i')
+        let value = req.query.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        const regex = new RegExp(value, 'i')
         BusStop.findOne({ $or: [{ name: { $regex: regex } }, { locationName: { $regex: regex } }] }, (err, busStops) => {
             if (err) return res.json(err)
             return res.json(busStops)
@@ -75,15 +77,17 @@ module.exports = function() {
         BusStop.find({ name: { $regex: regex } }).exec((err, busStops) => {
             if (err) return res.json(err)
             arr = busStops.filter(b => {
-                return _mapService.distanceBetweenPoint(origin.latitude, origin.longitude, b.latitude, b.longitude) < 1 || _mapService.distanceBetweenPoint(dest.latitude, dest.longitude, b.latitude, b.longitude)
+                return _mapService.distanceBetweenPoint(origin.latitude, origin.longitude, b.latitude, b.longitude) < 1 || _mapService.distanceBetweenPoint(dest.latitude, dest.longitude, b.latitude, b.longitude) < 1
             })
             return res.json(arr)
         })
     }
 
     this.add = async (req, res) => {
+        if (!req.body.name || !req.body.locationName || !req.body.latitude || !req.body.longitude)
+            return res.status(400).json({ err: 'fill to all field' })
         const newBusStop = {
-            name: req.body.busstopName,
+            name: req.body.name,
             locationName: req.body.locationName,
             latitude: req.body.latitude,
             longitude: req.body.longitude,
@@ -91,7 +95,7 @@ module.exports = function() {
         }
         BusStop.findOne({ name: newBusStop.name }, (err, busstop) => {
             if (err) return res.json(err)
-            if (busstop != null) return res.json({ err: 'busstop already exists' })
+            if (busstop != null) return res.status(400).json({ err: 'busstop already exists' })
             BusStop.create(newBusStop, (err, busStop) => {
                 if (err) {
                     res.json(err)
@@ -104,7 +108,7 @@ module.exports = function() {
     }
     this.update = async (req, res) => {
         const newBusStop = {
-            name: req.body.busstopName,
+            name: req.body.name,
             locationName: req.body.locationName,
             latitude: req.body.latitude,
             longitude: req.body.longitude,
@@ -120,7 +124,7 @@ module.exports = function() {
                 if (err) {
                     return res.json(err)
                 }
-                return res.json(busstop)
+                getBusStops(req, res)
             })
     }
 
@@ -136,6 +140,13 @@ module.exports = function() {
                         return getBusStops(req, res)
                     })
             }
+        })
+    }
+
+    this.filter = async (req, res) => {
+        BusStop.deleteMany({ $or: [{ name: null }, { locationName: null }, { latitude: null }, { longitude: null }] }, (err, buses) => {
+            if (err) return res.status(400).json(err)
+            return getBusStops(req, res)
         })
     }
 }

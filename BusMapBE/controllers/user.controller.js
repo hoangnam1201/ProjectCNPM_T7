@@ -1,9 +1,10 @@
 const User = require('./../models/user')
 const SHA256 = require('crypto-js/sha256')
 const Buses = require('../models/buses')
+const refreshToken = require('./../models/refreshToken')
 
 const getUsers = (req, res) => {
-    User.find({}, (err, users) => {
+    User.find({role: 'user'}, (err, users) => {
         if (err) {
             res.status(500).json(err)
         }
@@ -16,7 +17,6 @@ const getUsers = (req, res) => {
 getFavoriteBuses = async (id, res) => {
     User.findById(id, (err, user) => {
         if (err) return res.status(400).json(err)
-        console.log(user.favoriteBuses)
         Buses.aggregate([
             {
                 $match: {}
@@ -42,10 +42,8 @@ module.exports = function () {
     this.getByUsername = async (req, res) => {
         User.findOne({ username: req.query.username }, (err, user) => {
             if (err)
-                return res.json(err)
-            if (!user)
-                return res.json(false)
-            return res.json(true)
+                return res.status(400).json(err)
+            return res.json(user)
         })
     }
 
@@ -53,7 +51,7 @@ module.exports = function () {
         const userId = req.userData.userId
         User.findById(userId, (err, user) => {
             if (err)
-                return res.json(err)
+                return res.status(400).json(err)
             return res.json(user)
 
         })
@@ -62,25 +60,23 @@ module.exports = function () {
     this.getFavoriteBusesOfUser = async (req, res) => {
         const userId = req.userData.userId
         User.findOne({ _id: userId }).populate('favoriteBuses').then(user => {
-            let result = user.favoriteBuses.map(b => {
-                return { buses: b, isOwner: true }
-            })
-            return res.json(result)
-        }).catch(err => res.json(err))
+            let result = user.favoriteBuses
+            // return res.json(result.map(b => )
+        }).catch(err => res.status(400).json(err))
     }
 
     this.addFavoriteBuses = async (req, res) => {
         const userId = req.userData.userId
         User.findOneAndUpdate({ _id: userId }, { $push: { favoriteBuses: req.body.idBuses } }, { new: true }, (err, result) => {
-            if (err) return res.json(err)
-            return getFavoriteBuses(req.params.id, res)
+            if (err) return res.status(400).json(err)
+            return getFavoriteBuses(userId, res)
         })
     }
     this.deleteFavoriteBuses = async (req, res) => {
         const userId = req.userData.userId
         User.findOneAndUpdate({ _id: userId }, { $pull: { favoriteBuses: req.body.idBuses } }, (err, result) => {
-            if (err) return res.json(err)
-            return getFavoriteBuses(req.params.id, res)
+            if (err) return res.status(400).json(err)
+            return getFavoriteBuses(userId, res)
         })
     }
 
@@ -98,7 +94,7 @@ module.exports = function () {
         }
         User.create(newUser, (err, user) => {
             if (err) {
-                res.status(500).json(err)
+                res.status(400).json(err)
             } else {
                 res.json(user)
             }
@@ -106,9 +102,10 @@ module.exports = function () {
     }
     this.updatePassword = async (req, res) => {
         const userId = req.userData.userId
+        console.log(req.body.password)
         User.findOneAndUpdate({ _id: userId }, { password: SHA256(req.body.password).toString() }, { new: true }, (err, user) => {
             if (err) {
-                res.json(err)
+                res.status(400).json(err)
             } else {
                 res.json(user)
             }
@@ -122,7 +119,7 @@ module.exports = function () {
             { new: true },
             (err, user) => {
                 if (err) {
-                    res.json(err)
+                    res.status(400).json(err)
                 } else {
                     res.json(user)
                 }
@@ -130,11 +127,17 @@ module.exports = function () {
     }
 
     this.delete = async (req, res) => {
-        User.deleteOne({ _id: req.params.id }, (err, user) => {
+        User.findOneAndDelete({ _id: req.params.id }, (err, user) => {
             if (err) {
-                return res.json(err)
+                return res.status(400).json(err)
             }
-            return getUsers(req, res)
+            console.log(user._id)
+            refreshToken.findOneAndDelete({ userId: user._id }, (err, refresh) => {
+                if (err) {
+                    return res.status(400).json(err)
+                }
+                return getUsers(req, res)
+            })
 
         })
     }

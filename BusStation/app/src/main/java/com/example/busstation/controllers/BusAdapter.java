@@ -17,7 +17,6 @@ import com.example.busstation.MainActivity;
 import com.example.busstation.R;
 import com.example.busstation.models.AccessToken;
 import com.example.busstation.models.Buses;
-import com.example.busstation.models.BusesFavorite;
 import com.example.busstation.services.RetrofitService;
 import com.example.busstation.services.UserService;
 
@@ -169,7 +168,7 @@ public class BusAdapter extends BaseAdapter implements Filterable {
     }
 
     private void DeleteFavorite(Buses buses, View v) {
-        RetrofitService.create(UserService.class).AddFavorite("Token " + SharedPreferencesController.getStringValueByKey(context, "accessToken"), buses.get_id()).enqueue(new Callback<List<Buses>>() {
+        RetrofitService.create(UserService.class).DeleteFavorite("Token " + SharedPreferencesController.getStringValueByKey(context, "accessToken"), buses.get_id()).enqueue(new Callback<List<Buses>>() {
             @Override
             public void onResponse(Call<List<Buses>> call, Response<List<Buses>> response) {
                 Log.d("kiemtra", "onResponse: " + response.code());

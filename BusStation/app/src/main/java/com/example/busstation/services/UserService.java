@@ -1,9 +1,7 @@
 package com.example.busstation.services;
 
-import com.example.busstation.controllers.SharedPreferencesController;
 import com.example.busstation.models.AccessToken;
 import com.example.busstation.models.Buses;
-import com.example.busstation.models.BusesFavorite;
 import com.example.busstation.models.Token;
 import com.example.busstation.models.User;
 
@@ -12,12 +10,9 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
-import retrofit2.http.Path;
 
 public interface UserService {
 

@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitService {
     private static Retrofit Builder() {
         return new Retrofit.Builder()
-                .baseUrl("http://169.254.8.23:3002/api/")
+                .baseUrl("https://busapbe.herokuapp.com/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }

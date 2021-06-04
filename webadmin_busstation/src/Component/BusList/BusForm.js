@@ -39,6 +39,7 @@ const BusForm = () => {
 
   const toggleDrawer = (open) => (event) => {
     setOpenAddPointForm(open);
+
   };
   const onChangeName = async (e) => {
     setBusSTopName(e.target.value);
@@ -78,6 +79,7 @@ const BusForm = () => {
             ...busStops,
             { id: response.data._id, name: response.data.name },
           ]);
+          
           setBusesInput({
             ...busesInput,
             busstops: [...busesInput.busstops, response.data._id],
@@ -104,8 +106,6 @@ const BusForm = () => {
     });
   };
   const onAddPoint = () => {
-    console.log(busesInput.busstops);
-    console.log(busStops);
   };
   const onchangeHandle = (e) => {
     setBusesInput({ ...busesInput, [e.target.name]: e.target.value });
@@ -139,25 +139,23 @@ const BusForm = () => {
           <header className="detail-form__header">
             <h5>Add Point</h5>
           </header>
-          <form
-          // onKeyDown={handleEnterKey}
-          >
+          <form className="m-3">
             <TextField
-              className="w-100 mt-3"
+              className="w-100 mt-2"
               label="ID"
               name="id"
               value={addPointInput.id}
               onChange={onchangeHandleAddPoint}
             />
             <TextField
-              className="w-100 mb-2"
+              className="w-100 mt-2"
               label="Latitude"
               name="latitude"
               value={addPointInput.latitude}
               onChange={onchangeHandleAddPoint}
             />
             <TextField
-              className="w-100 mb-2"
+              className="w-100 mt-2"
               label="Longitude"
               name="longitude"
               value={addPointInput.longitude}
@@ -165,7 +163,7 @@ const BusForm = () => {
             />
             <Button
               fullWidth
-              className="mt-2"
+              className="mt-5"
               variant="contained"
               color="primary"
             >
@@ -258,12 +256,10 @@ const BusForm = () => {
                     ) : (
                       <div></div>
                     )}
-
                     <Button
                       variant="contained"
                       role="button"
-                      onClick={onDeleteBusStop}
-                    >
+                      onClick={onDeleteBusStop}>
                       <DeleteIcon />
                     </Button>
                     <Button variant="contained" onClick={toggleDrawer(true)}>

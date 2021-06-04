@@ -12,8 +12,10 @@ import AppContext from "../AppContext";
 import axios from "axios";
 import ConfirmDelete from "../common/ConfirmDeleteForm";
 import DeleteIcon from "@material-ui/icons/Delete";
-
 import EditIcon from "@material-ui/icons/Edit";
+import UpIcon from "@material-ui/icons/ArrowUpward";
+import TimeLineIcon from "@material-ui/icons/Timeline";
+
 const Row = ({ bus }) => {
   const { dispatch } = useContext(AppContext);
   const [openToEditForm, setOpenToEditForm] = useState(false);
@@ -21,20 +23,63 @@ const Row = ({ bus }) => {
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [busStopName, setBusSTopName] = useState("");
+  const [busStops, setBusStops] = useState([]);
+  const [point, setPoint] = useState({});
+  const [errAddPoint, setErrAddPoint] = useState("");
+
   const toggleDrawer = (open) => (event) => {
     setOpenToEditForm(open);
+    loadBusStop();
+  };
+  const loadBusStop = async () => {
+    try {
+      const fetch = {
+        method: "get",
+        url: `https://busapbe.herokuapp.com/api/buses/get-by-id/${bus._id}`,
+        headers: {
+          Authorization: "Token " + localStorage.getItem("accessToken"),
+        },
+      };
+      const resopone = await axios(fetch);
+      setBusStops(resopone.data.busstops)
+    } catch (err) {
+      setErrorMessage(err.resopone);
+    }
+  }
+  const onDeleteBusStop = (e) => {
+    const busStopId = e.target.parentElement.getAttribute("busstopid");
+    if (!busStopId) return;
+    console.log(e.target.parentElement);
+    setBusStops(
+      busStops.filter((b) => {
+        return b._id != busStopId;
+      })
+    );
+    setBusToEdit({ ...busToEdit, busstops: busToEdit.busstops.filter(b => b != busStopId) })
+  };
+  const onMoveUp = async (e) => {
+    const busStopId = e.target.parentElement.getAttribute("busstopid");
+    if (!busStopId) return;
+    console.log(busStopId);
+    const index = busStops.findIndex((x) => x._id == busStopId);
+    const temp = busStops;
+    const busStop = temp.splice(index, 1)[0];
+    temp.splice(index - 1, 0, busStop);
+    console.log(temp);
+    setBusStops(temp);
+    setBusToEdit({ ...busToEdit, busstops: temp.map((b) => b._id) });
   };
   const updateBus = async () => {
     try {
       const fetch = {
         method: "put",
-        url: `https://busapbe.herokuapp.com/api/buses/update/:${bus._id}`,
+        url: `https://busapbe.herokuapp.com/api/buses/update/${bus._id}`,
         headers: {
           Authorization: "Token " + localStorage.getItem("accessToken"),
         },
         data: busToEdit,
       };
-      console.log(fetch);
       const resopone = await axios(fetch);
       console.log(resopone);
       dispatch({ type: "UPDATE_ONE_BUS", payload: { ...busToEdit } });
@@ -69,6 +114,64 @@ const Row = ({ bus }) => {
     deleteBuses();
   };
 
+  const onAddBusStop = async () => {
+    const fetch = {
+      method: "get",
+      url: "https://busapbe.herokuapp.com/api/busstops/search-name",
+      headers: {
+        Authorization: "Token " + localStorage.getItem("accessToken"),
+      },
+      params: {
+        name: busStopName,
+      },
+    };
+    await axios(fetch)
+      .then((response) => {
+        if (response.status == 200 && response.data) {
+          console.log(response.data._id);
+          if (busStops.find((b) => b.id === response.data._id)) {
+            console.log("this already exist");
+            return;
+          }
+          setBusStops([
+            ...busStops,
+            { id: response.data._id, name: response.data.name },
+          ]);
+
+          setBusToEdit({
+            ...busToEdit,
+            busstops: [...busToEdit.busstops, response.data._id],
+          });
+        } else {
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const addPoint = async () => {
+    try {
+      const fetch = {
+        method: "put",
+        url: `https://busapbe.herokuapp.com/api/buses/add-point-after-id/${bus._id}`,
+        headers: {
+          Authorization: "Token " + localStorage.getItem("accessToken"),
+        },
+        data: point,
+      };
+      console.log(fetch)
+      await axios(fetch);
+      loadBusStop()
+      setErrAddPoint("")
+    } catch (err) {
+      setErrAddPoint("invalid field")
+    }
+  }
+  const onSetBeforeId = (e) => {
+    const busStopId = e.target.parentElement.getAttribute("busstopid");
+    if (busStopId == null) return;
+    setPoint({...point, id: busStopId})
+  }
   return (
     <>
       <ConfirmDelete
@@ -85,7 +188,7 @@ const Row = ({ bus }) => {
         open={openToEditForm}
         onClose={toggleDrawer(false)}
       >
-        <div className="detail-form__wrapper">
+        <div className="detail-form__wrapper w-100">
           <header className="detail-form__header">
             <h5>Update chuyến xe</h5>
           </header>
@@ -97,91 +200,164 @@ const Row = ({ bus }) => {
             ) : (
               <div className="error-message">Error: {errorMessage}</div>
             ))}
-          <form
-          // onKeyDown={handleEnterKey}
-          >
-            <TextField
-              className="w-100 mt-3"
-              label="ID"
-              name="id"
-              value={busToEdit.id}
-              onChange={(e) => {
-                setBusToEdit({ ...busToEdit, id: e.target.value });
-              }}
-            />
-            <TextField
-              className="w-100 mb-2"
-              label="Operating Time"
-              name="operatingTime"
-              value={busToEdit.operatingTime}
-              onChange={(e) => {
-                setBusToEdit({ ...busToEdit, operatingTime: e.target.value });
-              }}
-            />
-            <TextField
-              className="w-100 mb-2"
-              label="Time Distance"
-              name="timeDistance"
-              value={busToEdit.timeDistance}
-              onChange={(e) => {
-                setBusToEdit({ ...busToEdit, timeDistance: e.target.value });
-              }}
-            />
-            <TextField
-              className="w-100 mb-2"
-              label="Name"
-              name="name"
-              value={busToEdit.name}
-              onChange={(e) => {
-                setBusToEdit({ ...busToEdit, name: e.target.value });
-              }}
-            />
-            <TextField
-              className="w-100 mb-2"
-              label="Price"
-              name="price"
-              value={busToEdit.price}
-              onChange={(e) => {
-                setBusToEdit({ ...busToEdit, price: e.target.value });
-              }}
-            />
-            <TextField
-              className="w-100 mb-2"
-              label="Seats"
-              name="seats"
-              value={busToEdit.seats}
-              onChange={(e) => {
-                setBusToEdit({ ...busToEdit, seats: e.target.value });
-              }}
-            />
-            <TextField
-              className="w-100 mb-2"
-              label="Bus stop"
-              name="busstops"
-              value={busToEdit.busstops}
-              onChange={(e) => {
-                setBusToEdit({ ...busToEdit, busstops: [e.target.value] });
-              }}
-            />
-
-            <Button
-              fullWidth
-              className="mt-2"
-              variant="contained"
-              color="primary"
-              onClick={updateBus}
-            >
-              Update
+          <form className="m-3 d-flex flex-wrap">
+            <div className="w-50" style={{ "height": "600px", "overflow": "auto" }}>
+              <p>Bus Stops</p>
+              <div>
+                {busStops.map((b, index) => {
+                  return (
+                    <div
+                      className="d-flex py-3 border-bottom align-items-center"
+                      key={b._id}
+                      busstopid={b._id}
+                    >
+                      <p className="w-75 m-0">
+                        {index}. {b.name}
+                      </p>
+                      {index !== 0 ? (
+                        <Button variant="contained"
+                          onClick={onMoveUp}>
+                          <UpIcon />
+                        </Button>
+                      ) : (
+                        <div></div>
+                      )}
+                      <Button
+                        variant="contained"
+                        role="button"
+                        onClick={onDeleteBusStop}
+                      >
+                        <DeleteIcon />
+                      </Button>
+                      <Button variant="contained" onClick={onSetBeforeId}>
+                        <TimeLineIcon />
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="w-50">
+              <div className="m-3">
+                <TextField
+                  className="w-100 mt-3"
+                  label="ID"
+                  name="id"
+                  value={busToEdit.id}
+                  onChange={(e) => {
+                    setBusToEdit({ ...busToEdit, id: e.target.value });
+                  }}
+                />
+                <TextField
+                  className="w-100 mb-2"
+                  label="Operating Time"
+                  name="operatingTime"
+                  value={busToEdit.operatingTime}
+                  onChange={(e) => {
+                    setBusToEdit({ ...busToEdit, operatingTime: e.target.value });
+                  }}
+                />
+                <TextField
+                  className="w-100 mb-2"
+                  label="Time Distance"
+                  name="timeDistance"
+                  value={busToEdit.timeDistance}
+                  onChange={(e) => {
+                    setBusToEdit({ ...busToEdit, timeDistance: e.target.value });
+                  }}
+                />
+                <TextField
+                  className="w-100 mb-2"
+                  label="Name"
+                  name="name"
+                  value={busToEdit.name}
+                  onChange={(e) => {
+                    setBusToEdit({ ...busToEdit, name: e.target.value });
+                  }}
+                />
+                <TextField
+                  className="w-100 mb-2"
+                  label="Price"
+                  name="price"
+                  value={busToEdit.price}
+                  onChange={(e) => {
+                    setBusToEdit({ ...busToEdit, price: e.target.value });
+                  }}
+                />
+                <TextField
+                  className="w-100 mb-2"
+                  label="Seats"
+                  name="seats"
+                  value={busToEdit.seats}
+                  onChange={(e) => {
+                    setBusToEdit({ ...busToEdit, seats: e.target.value });
+                  }}
+                />
+                <TextField
+                  className="w-100 mb-2"
+                  label="Bus stop"
+                  name="busstops"
+                  value={busStopName}
+                  onChange={(e) => {
+                    setBusSTopName(e.target.value);
+                  }}
+                />
+                <Button variant="contained" onClick={onAddBusStop}>
+                  Add Bus Stop
+                </Button>
+                <TextField
+                  className="w-100 mb-2"
+                  label="before bus stop"
+                  name="latitude"
+                  value={point.id}
+                  onChange={(e) => {
+                    setPoint({ ...point, id: e.target.value });
+                  }}
+                />
+                <TextField
+                  className="w-100 mb-2"
+                  label="latitude"
+                  name="latitude"
+                  value={point.latitude}
+                  onChange={(e) => {
+                    setPoint({ ...point, latitude: e.target.value });
+                  }}
+                />
+                <TextField
+                  className="w-100 mb-2"
+                  label="longitude"
+                  name="longitude"
+                  value={point.longitude}
+                  onChange={(e) => {
+                    setPoint({ ...point, longitude: e.target.value });
+                  }}
+                />
+                <Button variant="contained" onClick={addPoint}>
+                  add point
+                </Button>
+                <p className="text-danger">{errAddPoint}</p>
+              </div>
+            </div>
+            <div style={{ "transform": "translateX(-50%)", "marginLeft": "50%" }}>
+              <Button
+                fullWidth
+                className="mt-2"
+                variant="contained"
+                color="primary"
+                onClick={updateBus}
+              >
+                Update
             </Button>
-            <Button
-              fullWidth
-              className="mt-2"
-              variant="contained"
-              color="primary"
-              onClick={() => setOpenToEditForm(false)}
-            >
-              Cancel
+              <Button
+                fullWidth
+                className="mt-2"
+                variant="contained"
+                color="primary"
+                onClick={() => setOpenToEditForm(false)}
+              >
+                Cancel
             </Button>
+            </div>
           </form>
         </div>
       </Drawer>
