@@ -5,6 +5,15 @@
 + lifecycle-livedata-ktx:2.3.1
 + lifecycle-viewmodel-ktx:2.3.1
 
+Version 3 ---------------------------- Web admin
+các thư viện cần cài đặt
++ npm
++ material ui
++ boostrap ui
++ router
++ axios
+
+======>
 - Database của app được call từ API, data được lưu trữ trên cloud của MongoDB và được deloy lên heroku
 do đó không cần chạy.
 
@@ -20,3 +29,13 @@ các trạm xe bus đã được hiển thị trên bản đồ.
 - Khi người dùng muốn tìm đường click vào mục tìm đường có trên map. Ở giao diện tìm đường người dùng nhập vị trí đi và đến
 - Khi người dùng muốn coi danh sách tuyến xe yêu thích, click vào mục danh sach tuyến xe yêu thích ở menu
 - Khi người dùng muốn thay đổi thông tin cá nhân hoặc password, click vào mục account setting.
+
+
+==>
+- Khởi động project bằng câu lệnh npm start hoặc http://busstationmap.herokuapp.com/
+- Đăng nhập bằng tài khoản username: admin2 password: 123123123
+- Web có 3 chức năng chính quản lý trạm xe, chuyến xe, user
+- Khi click vào quản lý trạm xe thì danh sách các trạm xe sẽ hiển thị. Ta chọn vào các chức năng thêm, xóa sửa tùy ý
+- Khi click vào quản lý trạm xe thì danh sách các chuyến xe sẽ hiển thị. Ta chọn vào các chức năng thêm, xóa sửa tùy ý
+- Khi click vào quản lý trạm xe thì danh sách các user sẽ hiển thị. Quản lý user chỉ có chức năng xóa user
+
