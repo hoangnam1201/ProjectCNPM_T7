@@ -35,8 +35,8 @@ public class SearchRoute extends AppCompatActivity {
         editText1.setFocusable(false);
         editText1.setOnClickListener(v -> {
             currentFocus = editText1;
-            List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
-                    Place.Field.LAT_LNG,Place.Field.NAME);
+            List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,Place.Field.NAME);
+            Log.d("kiemtra", "onCreate: ");
             Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,
                     fieldList).build(SearchRoute.this);
             startActivityForResult(intent,100);
@@ -63,8 +63,6 @@ public class SearchRoute extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == RESULT_OK){
             Place place = Autocomplete.getPlaceFromIntent(data);
             if(currentFocus == editText1){
@@ -76,8 +74,8 @@ public class SearchRoute extends AppCompatActivity {
         else if (resultCode == AutocompleteActivity.RESULT_ERROR){
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getApplicationContext(),status.getStatusMessage(),Toast.LENGTH_SHORT).show();
-
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void anhxa(){

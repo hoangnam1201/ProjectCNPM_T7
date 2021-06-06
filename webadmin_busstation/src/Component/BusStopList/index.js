@@ -44,6 +44,8 @@ const BusStopList = () => {
     const busStopList = state.busstop;
     var result = null;
     if (busStopList.length > 0) {
+      console.log(page)
+      console.log(rowsPerPage)
       result = busStopList
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
         .map((busstop) => {
@@ -78,7 +80,7 @@ const BusStopList = () => {
                 SelectProps={{
                   inputProps: { style: { lineHeight: "16px" } },
                 }}
-                onChangePage={(newValue) => setPage(newValue)}
+                onChangePage={(e, page) => setPage(page)}
                 onChangeRowsPerPage={(e) => {
                   setRowsPerPage(parseInt(e.target.value, 10));
                   setPage(0);

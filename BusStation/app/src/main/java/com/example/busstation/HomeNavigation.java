@@ -529,11 +529,11 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
             return;
         }
         if (mode.equals("router")) {
-//            String origin = SharedPreferencesController.getStringValueByKey(getApplicationContext(), "origin");
-            String origin = "Bến tàu khách Thành phố, Bến Nghé, Quận 1, Thành phố Hồ Chí Minh";
+            String origin = SharedPreferencesController.getStringValueByKey(getApplicationContext(), "origin");
+//            String origin = "Bến tàu khách Thành phố, Bến Nghé, Quận 1, Thành phố Hồ Chí Minh";
 
-//            String dest = SharedPreferencesController.getStringValueByKey(getApplicationContext(), "dest");
-            String dest = "Đan viện Cát Minh, Đường Tôn Đức Thắng, Bến Nghé, Quận 1, Thành phố Hồ Chí Minh";
+            String dest = SharedPreferencesController.getStringValueByKey(getApplicationContext(), "dest");
+//            String dest = "Đan viện Cát Minh, Đường Tôn Đức Thắng, Bến Nghé, Quận 1, Thành phố Hồ Chí Minh";
             if (origin == null || dest == null) {
                 Toast.makeText(getApplicationContext(), "not found origin or dest", Toast.LENGTH_SHORT).show();
                 SharedPreferencesController.setStringValue(getApplicationContext(), "modeFollow", null);

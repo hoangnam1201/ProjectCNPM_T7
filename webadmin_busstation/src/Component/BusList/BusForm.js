@@ -33,6 +33,9 @@ const BusForm = () => {
     latitude: "",
     longitude: "",
   });
+
+  
+
   const onchangeHandleAddPoint = (e) => {
     setAddPointInput({ ...addPointInput, [e.target.name]: e.target.value });
   };
@@ -123,7 +126,7 @@ const BusForm = () => {
       };
       const bus = await axios(fetch);
       dispatch({ type: "CREATE_ONE_BUS", payload: { bus } });
-      console.log(bus);
+      alert("add success!!");
     } catch (err) {
       console.log(err);
     }

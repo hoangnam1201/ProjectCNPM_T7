@@ -27,7 +27,7 @@ const Row = ({ busstop }) => {
     try {
       const fetch = {
         method: "put",
-        url: `https://busapbe.herokuapp.com/api/busstops/update/:${busstop._id}`,
+        url: `https://busapbe.herokuapp.com/api/busstops/update/${busstop._id}`,
         headers: {
           Authorization: "Token " + localStorage.getItem("accessToken"),
         },
@@ -47,7 +47,7 @@ const Row = ({ busstop }) => {
     try {
       const fetch = {
         method: "delete",
-        url: `https://busapbe.herokuapp.com/api/busstops/delete/:${busstop._id}`,
+        url: `https://busapbe.herokuapp.com/api/busstops/delete/${busstop._id}`,
         headers: {
           Authorization: "Token " + localStorage.getItem("accessToken"),
         },

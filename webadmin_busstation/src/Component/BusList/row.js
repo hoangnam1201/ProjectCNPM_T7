@@ -25,7 +25,7 @@ const Row = ({ bus }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [busStopName, setBusSTopName] = useState("");
   const [busStops, setBusStops] = useState([]);
-  const [point, setPoint] = useState({});
+  const [point, setPoint] = useState({ id: "", latitude: "", longitude: "" });
   const [errAddPoint, setErrAddPoint] = useState("");
 
   const toggleDrawer = (open) => (event) => {
@@ -33,6 +33,7 @@ const Row = ({ bus }) => {
     loadBusStop();
   };
   const loadBusStop = async () => {
+    setPoint({ id: "", latitude: "", longitude: "" });
     try {
       const fetch = {
         method: "get",
@@ -128,14 +129,13 @@ const Row = ({ bus }) => {
     await axios(fetch)
       .then((response) => {
         if (response.status == 200 && response.data) {
-          console.log(response.data._id);
           if (busStops.find((b) => b.id === response.data._id)) {
             console.log("this already exist");
             return;
           }
           setBusStops([
             ...busStops,
-            { id: response.data._id, name: response.data.name },
+            { _id: response.data._id, name: response.data.name },
           ]);
 
           setBusToEdit({
@@ -150,27 +150,47 @@ const Row = ({ bus }) => {
       });
   };
   const addPoint = async () => {
-    try {
-      const fetch = {
-        method: "put",
-        url: `https://busapbe.herokuapp.com/api/buses/add-point-after-id/${bus._id}`,
-        headers: {
-          Authorization: "Token " + localStorage.getItem("accessToken"),
-        },
-        data: point,
-      };
-      console.log(fetch)
-      await axios(fetch);
-      loadBusStop()
-      setErrAddPoint("")
-    } catch (err) {
-      setErrAddPoint("invalid field")
-    }
+    const fetch = {
+      method: "put",
+      url: `https://busapbe.herokuapp.com/api/buses/update/${bus._id}`,
+      headers: {
+        Authorization: "Token " + localStorage.getItem("accessToken"),
+      },
+      data: busToEdit,
+    };
+    await axios(fetch)
+      .then((response) => {
+        if (response.status == 200 && response.data) {
+          console.log(response)
+          dispatch({ type: "UPDATE_ONE_BUS", payload: { ...busToEdit } });
+          const fetch2 = {
+            method: "put",
+            url: `https://busapbe.herokuapp.com/api/buses/add-point-after-id/${bus._id}`,
+            headers: {
+              Authorization: "Token " + localStorage.getItem("accessToken"),
+            },
+            data: point,
+          }
+          axios(fetch2).then(response => {
+            if (response.status == 200) {
+              console.log(response)
+              loadBusStop()
+              console.log("ok")
+              setErrAddPoint("")
+            }
+          }).catch(err =>
+            console.log(err.response.data)
+          )
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   const onSetBeforeId = (e) => {
     const busStopId = e.target.parentElement.getAttribute("busstopid");
     if (busStopId == null) return;
-    setPoint({...point, id: busStopId})
+    setPoint({ ...point, id: busStopId })
   }
   return (
     <>
@@ -200,43 +220,7 @@ const Row = ({ bus }) => {
             ) : (
               <div className="error-message">Error: {errorMessage}</div>
             ))}
-          <form className="m-3 d-flex flex-wrap">
-            <div className="w-50" style={{ "height": "600px", "overflow": "auto" }}>
-              <p>Bus Stops</p>
-              <div>
-                {busStops.map((b, index) => {
-                  return (
-                    <div
-                      className="d-flex py-3 border-bottom align-items-center"
-                      key={b._id}
-                      busstopid={b._id}
-                    >
-                      <p className="w-75 m-0">
-                        {index}. {b.name}
-                      </p>
-                      {index !== 0 ? (
-                        <Button variant="contained"
-                          onClick={onMoveUp}>
-                          <UpIcon />
-                        </Button>
-                      ) : (
-                        <div></div>
-                      )}
-                      <Button
-                        variant="contained"
-                        role="button"
-                        onClick={onDeleteBusStop}
-                      >
-                        <DeleteIcon />
-                      </Button>
-                      <Button variant="contained" onClick={onSetBeforeId}>
-                        <TimeLineIcon />
-                      </Button>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+          <form className="m-3 d-md-flex flex-wrap">
             <div className="w-50">
               <div className="m-3">
                 <TextField
@@ -338,25 +322,61 @@ const Row = ({ bus }) => {
                 <p className="text-danger">{errAddPoint}</p>
               </div>
             </div>
-            <div style={{ "transform": "translateX(-50%)", "marginLeft": "50%" }}>
-              <Button
-                fullWidth
-                className="mt-2"
-                variant="contained"
-                color="primary"
-                onClick={updateBus}
-              >
-                Update
+            <div className="w-50" >
+              <p>Bus Stops</p>
+              <div style={{ "height": "500px", "overflow": "auto" }}>
+                {busStops.map((b, index) => {
+                  return (
+                    <div
+                      className="d-flex py-3 border-bottom align-items-center"
+                      key={b._id}
+                      busstopid={b._id}
+                    >
+                      <p className="w-75 m-0">
+                        {index}. {b.name}
+                      </p>
+                      {index !== 0 ? (
+                        <Button variant="contained"
+                          onClick={onMoveUp}>
+                          <UpIcon />
+                        </Button>
+                      ) : (
+                        <div></div>
+                      )}
+                      <Button
+                        variant="contained"
+                        role="button"
+                        onClick={onDeleteBusStop}
+                      >
+                        <DeleteIcon />
+                      </Button>
+                      <Button variant="contained" onClick={onSetBeforeId}>
+                        <TimeLineIcon />
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{ "transform": "translateX(-50%)", "marginLeft": "50%" }}>
+                <Button
+                  fullWidth
+                  className="mt-2"
+                  variant="contained"
+                  color="primary"
+                  onClick={updateBus}
+                >
+                  Update
             </Button>
-              <Button
-                fullWidth
-                className="mt-2"
-                variant="contained"
-                color="primary"
-                onClick={() => setOpenToEditForm(false)}
-              >
-                Cancel
+                <Button
+                  fullWidth
+                  className="mt-2"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setOpenToEditForm(false)}
+                >
+                  Cancel
             </Button>
+              </div>
             </div>
           </form>
         </div>

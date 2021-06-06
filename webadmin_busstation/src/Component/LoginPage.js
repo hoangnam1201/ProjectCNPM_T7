@@ -32,6 +32,7 @@ const LoginPage = () => {
       localStorage.setItem("refreshToken", refreshToken);
       console.log(accessToken);
       //
+      console.log(response)
       const fetch2 = {
         method: "post",
         url: "https://busapbe.herokuapp.com/api/users/get-infor",
@@ -40,12 +41,13 @@ const LoginPage = () => {
           Authorization: "Token " + localStorage.getItem("accessToken"),
         },
       };
-      const respone2 = await axios(fetch2);
-      const { username } = respone2.data;
+      const response2 = await axios(fetch2);
+      const { username } = response2.data;
+      console.log(response2)
       dispatch({ type: "CURRENT_USER", payload: { username } });
     } catch (error) {
-      // console.log(error);
-      setErrorMessage(error.response.data.err);
+      console.log(error);
+      // setErrorMessage(error.response.data.err);
     }
   };
   const handleEnterKey = (e) => {

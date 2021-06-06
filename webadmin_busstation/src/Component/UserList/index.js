@@ -80,7 +80,7 @@ const UserList = () => {
                 SelectProps={{
                   inputProps: { style: { lineHeight: "16px" } },
                 }}
-                onChangePage={(newValue) => setPage(newValue)}
+                onChangePage={(e, page) => setPage(page)}
                 onChangeRowsPerPage={(e) => {
                   setRowsPerPage(parseInt(e.target.value, 10));
                   setPage(0);
