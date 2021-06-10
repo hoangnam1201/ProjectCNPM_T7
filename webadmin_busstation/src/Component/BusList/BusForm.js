@@ -23,27 +23,8 @@ const BusForm = () => {
     seats: "",
     busstops: [],
   });
-  const [errorMessage, setErrorMessage] = useState(null);
   const [busStopName, setBusSTopName] = useState("");
   const [busStops, setBusStops] = useState([]);
-  const [openAddPointForm, setOpenAddPointForm] = useState(false);
-
-  const [addPointInput, setAddPointInput] = useState({
-    id: "",
-    latitude: "",
-    longitude: "",
-  });
-
-  
-
-  const onchangeHandleAddPoint = (e) => {
-    setAddPointInput({ ...addPointInput, [e.target.name]: e.target.value });
-  };
-
-  const toggleDrawer = (open) => (event) => {
-    setOpenAddPointForm(open);
-
-  };
   const onChangeName = async (e) => {
     setBusSTopName(e.target.value);
   };
@@ -133,57 +114,6 @@ const BusForm = () => {
   };
   return (
     <>
-      <Drawer
-        anchor="right"
-        onClose={toggleDrawer(false)}
-        open={openAddPointForm}
-      >
-        <div className="detail-form__wrapper">
-          <header className="detail-form__header">
-            <h5>Add Point</h5>
-          </header>
-          <form className="m-3">
-            <TextField
-              className="w-100 mt-2"
-              label="ID"
-              name="id"
-              value={addPointInput.id}
-              onChange={onchangeHandleAddPoint}
-            />
-            <TextField
-              className="w-100 mt-2"
-              label="Latitude"
-              name="latitude"
-              value={addPointInput.latitude}
-              onChange={onchangeHandleAddPoint}
-            />
-            <TextField
-              className="w-100 mt-2"
-              label="Longitude"
-              name="longitude"
-              value={addPointInput.longitude}
-              onChange={onchangeHandleAddPoint}
-            />
-            <Button
-              fullWidth
-              className="mt-5"
-              variant="contained"
-              color="primary"
-            >
-              ADD
-            </Button>
-            <Button
-              fullWidth
-              className="mt-2"
-              variant="contained"
-              color="primary"
-              onClick={() => setOpenAddPointForm(false)}
-            >
-              Cancel
-            </Button>
-          </form>
-        </div>
-      </Drawer>
       <div className="d-flex">
         <form
         // onKeyDown={handleEnterKey}
@@ -264,9 +194,6 @@ const BusForm = () => {
                       role="button"
                       onClick={onDeleteBusStop}>
                       <DeleteIcon />
-                    </Button>
-                    <Button variant="contained" onClick={toggleDrawer(true)}>
-                      <TimeLineIcon />
                     </Button>
                   </div>
                 );
