@@ -75,6 +75,7 @@ public class BusAdapter extends BaseAdapter implements Filterable {
         }
 
         imgLike.setOnClickListener(v -> {
+            v.setEnabled(false);
             if (!buses.getFavorite()) {
                 AddFavorite(buses, v);
             } else {
@@ -139,6 +140,7 @@ public class BusAdapter extends BaseAdapter implements Filterable {
                     ImageView img = (ImageView) parent.getChildAt(3);
                     img.setImageResource(R.drawable.heart);
                     buses.setFavorite(true);
+                    v.setEnabled(true);
                     return;
                 }
                 RetrofitService.create(UserService.class).refreshToken(SharedPreferencesController.getStringValueByKey(context, "refreshToken")).enqueue(new Callback<AccessToken>() {
@@ -163,6 +165,7 @@ public class BusAdapter extends BaseAdapter implements Filterable {
 
             @Override
             public void onFailure(Call<List<Buses>> call, Throwable t) {
+                v.setEnabled(true);
             }
         });
     }
@@ -178,6 +181,7 @@ public class BusAdapter extends BaseAdapter implements Filterable {
                     ImageView img = (ImageView) parent.getChildAt(3);
                     img.setImageResource(R.drawable.heart_off);
                     buses.setFavorite(false);
+                    v.setEnabled(true);
                     return;
                 }
                 RetrofitService.create(UserService.class).refreshToken(SharedPreferencesController.getStringValueByKey(context, "refreshToken")).enqueue(new Callback<AccessToken>() {
@@ -202,6 +206,7 @@ public class BusAdapter extends BaseAdapter implements Filterable {
 
             @Override
             public void onFailure(Call<List<Buses>> call, Throwable t) {
+                v.setEnabled(true);
             }
         });
     }

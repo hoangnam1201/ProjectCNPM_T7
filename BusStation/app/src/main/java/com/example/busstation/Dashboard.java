@@ -5,6 +5,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -34,9 +35,10 @@ public class Dashboard extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
         HomeNavigation.info(this.findViewById(R.id.tvNameUser),this.findViewById(R.id.tvEmail));
         drawerLayout=findViewById(R.id.drawer_layout);
+        Log.d("kiemtra", "onCreate: " + "aa");
         anhxa();
         lvFavo.setOnItemLongClickListener((adapterView, view, i, l)->{
-            SharedPreferencesController.setBooleanValue(this, "myPositionl", false);
+            SharedPreferencesController.setBooleanValue(this, "myPosition", false);
             SharedPreferencesController.setStringValue(this, "modeFollow", "buses");
             SharedPreferencesController.setStringValue(this, "followIdItem", arrayBuses.get(i).get_id().toString());
             Intent intent = new Intent(this, HomeNavigation.class);
@@ -51,8 +53,10 @@ public class Dashboard extends AppCompatActivity {
         RetrofitService.create(UserService.class).GetFavorite("Token " + SharedPreferencesController.getStringValueByKey(this,"accessToken")).enqueue(new Callback<List<Buses>>() {
             @Override
             public void onResponse(Call<List<Buses>> call, Response<List<Buses>> response) {
+                Log.d("kiemtra", "onResponse: " + response.code());
                 if(response.isSuccessful()){
                     arrayBuses = response.body();
+                    Log.d("kiemtra", "onResponse: " + response.body().size());
                     adapter =new BusAdapter(getApplicationContext(),R.layout.activity_list_bus,arrayBuses,1);
                     lvFavo.setAdapter(adapter);
                 }
@@ -60,7 +64,7 @@ public class Dashboard extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Buses>> call, Throwable t) {
-
+                Log.d("kiemtra", "onResponse: " + t.getLocalizedMessage());
             }
         });
     }
