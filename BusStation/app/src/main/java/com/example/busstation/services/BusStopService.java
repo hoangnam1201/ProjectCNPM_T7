@@ -17,7 +17,7 @@ import retrofit2.http.Query;
 public interface BusStopService {
 
     @GET("busstops/get-all")
-    Call<List<BusStop>> getAllBusStops(@Header("Authorization") String authorization);
+    Call<List<BusStop>> getAll(@Header("Authorization") String authorization);
 
     @GET("busstops/get-all-name")
     Call<List<String>> getAllName(@Header("Authorization") String authorization);

@@ -114,6 +114,9 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
             String str = searchView.getText().toString();
             onSearchBusStop(str);
         });
+        findViewById(R.id.btnCurrentLocation).setOnClickListener(v ->{
+            getMyLocation();
+        });
     }
 
     public void onSearchBusStop(String str) {
@@ -272,6 +275,7 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case LOCATION_REQUEST_CODE: {
                 if (grantResults.length > 0
@@ -303,7 +307,6 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
         }
         map.setMyLocationEnabled(true);
         map.setOnMyLocationChangeListener(location -> {
-
             myLocation = location;
             LatLng ltlng = new LatLng(location.getLatitude(), location.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(
@@ -321,12 +324,10 @@ public class HomeNavigation extends AppCompatActivity implements OnMapReadyCallb
         }
         map = googleMap;
         UpLoadMarker();
-        if (!SharedPreferencesController.getBooleanValueByKey(this, "myPosition")) return;
-        getMyLocation();
     }
 
     private void uploadAll() {
-        RetrofitService.create(BusStopService.class).getAllBusStops("Token " + SharedPreferencesController.getStringValueByKey(context, "accessToken")).enqueue(new Callback<List<BusStop>>() {
+        RetrofitService.create(BusStopService.class).getAll("Token " + SharedPreferencesController.getStringValueByKey(context, "accessToken")).enqueue(new Callback<List<BusStop>>() {
             @Override
             public void onResponse(Call<List<BusStop>> call, Response<List<BusStop>> response) {
                 if (response.isSuccessful() && response.body().size() > 0) {

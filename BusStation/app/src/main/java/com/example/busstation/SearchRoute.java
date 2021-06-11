@@ -2,10 +2,12 @@ package com.example.busstation;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,7 +23,10 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.busstation.HomeNavigation.redirectActivity;
+
 public class SearchRoute extends AppCompatActivity {
+    DrawerLayout drawerLayout;
     EditText editText1, editText2;
     Button btnSearch;
     EditText currentFocus;
@@ -30,6 +35,8 @@ public class SearchRoute extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_route2);
         anhxa();
+        drawerLayout=findViewById(R.id.drawer_layout);
+        HomeNavigation.info(this.findViewById(R.id.tvNameUser),this.findViewById(R.id.tvEmail));
         getIntent();
         Places.initialize(getApplicationContext(),getString(R.string.map_api_key));
         editText1.setFocusable(false);
@@ -61,6 +68,8 @@ public class SearchRoute extends AppCompatActivity {
 
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 100 && resultCode == RESULT_OK){
@@ -84,4 +93,41 @@ public class SearchRoute extends AppCompatActivity {
         btnSearch = (Button) findViewById(R.id.btnTimDuong);
 
     }
+
+    public void ClickMenu(View view){
+        HomeNavigation.openDrawer(drawerLayout);
+    }
+
+    public void ClickLogo(View view){
+        HomeNavigation.closeDrawer(drawerLayout);
+    }
+
+    public void ClickHome(View view){
+        HomeNavigation.openDrawer(drawerLayout);
+        redirectActivity(this,HomeNavigation.class);
+    }
+
+    public void ClickSearchBus(View view){
+        recreate();
+    }
+
+    public void ClickDashBoard(View view){
+        HomeNavigation.openDrawer(drawerLayout);
+        redirectActivity(this,Dashboard.class);
+    }
+
+    public void ClickAboutUs(View view){
+        HomeNavigation.openDrawer(drawerLayout);
+        redirectActivity(this,AboutUs.class);
+    }
+
+    public void ClickSetUp(View view){
+        HomeNavigation.openDrawer(drawerLayout);
+        redirectActivity(this,AccountSetting.class);
+    }
+
+    public void ClickLogout(View view){
+        HomeNavigation.logout(this);
+    }
+
 }

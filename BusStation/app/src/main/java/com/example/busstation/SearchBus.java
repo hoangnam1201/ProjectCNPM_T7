@@ -50,7 +50,7 @@ public class SearchBus extends AppCompatActivity {
         drawerLayout=findViewById(R.id.drawer_layout);
         filterSearchView();
         lvBus.setOnItemLongClickListener((adapterView, view, i, l)->{
-            SharedPreferencesController.setBooleanValue(this, "myPositionl", false);
+            SharedPreferencesController.setBooleanValue(this, "myPosition", false);
             SharedPreferencesController.setStringValue(this, "modeFollow", "buses");
             SharedPreferencesController.setStringValue(this, "followIdItem", arrayBuses.get(i).get_id().toString());
             Intent intent = new Intent(this, HomeNavigation.class);
@@ -83,7 +83,7 @@ public class SearchBus extends AppCompatActivity {
 
     }
     private void uploadBuses(){
-        RetrofitService.create(BusesService.class).GetBusesFavorite("Token " + SharedPreferencesController.getStringValueByKey(getApplicationContext(),"accessToken")).enqueue(new Callback<List<Buses>>() {
+        RetrofitService.create(BusesService.class).GetAll("Token " + SharedPreferencesController.getStringValueByKey(getApplicationContext(),"accessToken")).enqueue(new Callback<List<Buses>>() {
             @Override
             public void onResponse(Call<List<Buses>> call, Response<List<Buses>> response) {
                 Log.d("kiemtra", "buses: " + response.code());

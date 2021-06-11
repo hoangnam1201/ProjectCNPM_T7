@@ -25,6 +25,8 @@ import com.example.busstation.models.User;
 import com.example.busstation.services.RetrofitService;
 import com.example.busstation.services.UserService;
 
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -121,34 +123,47 @@ public class AccountSetting extends AppCompatActivity {
 
     public void ChangeInfo() {
         findViewById(R.id.loadingLayout).setVisibility(View.VISIBLE);
-
+        TextView tvError = findViewById(R.id.tvError);
         RetrofitService.create(UserService.class).ChangeInfo("Token " + SharedPreferencesController.getStringValueByKey(this, "accessToken"),
                 edtEmail.getText().toString(),
                 edtFullname.getText().toString(),
                 edtUserName.getText().toString()).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                findViewById(R.id.loadingLayout).setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     tvName.setText(response.body().getFullname());
                     tvEmail.setText(response.body().getEmail());
+                    tvError.setText("");
+                    findViewById(R.id.loadingLayout).setVisibility(View.GONE);
                 } else {
-                    RetrofitService.create(UserService.class).refreshToken(SharedPreferencesController.getStringValueByKey(context, "refreshToken")).enqueue(new Callback<AccessToken>() {
-                        @Override
-                        public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                SharedPreferencesController.setStringValue(context, "accessToken", response.body().getAccessToken());
-                                ChangeInfo();
-                            } else {
-                                SharedPreferencesController.clear(context);
-                                finishAffinity();
-                                redirectActivity((Activity) context, MainActivity.class);
+                    if(response.code() == 401){
+                        RetrofitService.create(UserService.class).refreshToken(SharedPreferencesController.getStringValueByKey(context, "refreshToken")).enqueue(new Callback<AccessToken>() {
+                            @Override
+                            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+                                if (response.isSuccessful() && response.body() != null) {
+                                    SharedPreferencesController.setStringValue(context, "accessToken", response.body().getAccessToken());
+                                    ChangeInfo();
+                                } else {
+                                    SharedPreferencesController.clear(context);
+                                    finishAffinity();
+                                    redirectActivity((Activity) context, MainActivity.class);
+                                }
                             }
+                            @Override
+                            public void onFailure(Call<AccessToken> call, Throwable t) {
+                            }
+                        });
+                    }
+                    else{
+                        findViewById(R.id.loadingLayout).setVisibility(View.GONE);
+                        try {
+                            JSONObject jObjError = new JSONObject(response.errorBody().string());
+                            tvError.setText(jObjError.getString("err"));
+
+                        } catch (Exception e) {
+                            tvError.setText(e.getMessage());
                         }
-                        @Override
-                        public void onFailure(Call<AccessToken> call, Throwable t) {
-                        }
-                    });
+                    }
                 }
             }
             @Override

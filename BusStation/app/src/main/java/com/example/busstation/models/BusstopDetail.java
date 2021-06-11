@@ -31,4 +31,5 @@ public class BusstopDetail {
     public List<Buses> getBuses() {
         return buses;
     }
+
 }

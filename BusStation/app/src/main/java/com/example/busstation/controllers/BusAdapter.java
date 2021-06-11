@@ -109,6 +109,7 @@ public class BusAdapter extends BaseAdapter implements Filterable {
                     for (Buses buses : busListOld) {
                         if (buses.getName().toLowerCase().contains(strSearch.toLowerCase())) {
                             list.add(buses);
+                            continue;
                         }
                         if (buses.getId().toLowerCase().contains(strSearch.toLowerCase())) {
                             list.add(buses);

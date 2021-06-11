@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 
 public interface BusesService {
     @POST("buses/get-favorite-bus")
-    Call<List<Buses>> GetBusesFavorite(@Header("Authorization") String authorization);
+    Call<List<Buses>> GetAll(@Header("Authorization") String authorization);
 
     @GET("buses/get-by-id/{id}")
     Call<BusesDetail> GetByID(@Path("id") String id, @Header("Authorization") String authorization);

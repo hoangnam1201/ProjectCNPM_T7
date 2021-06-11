@@ -42,8 +42,12 @@ const Row = ({ bus }) => {
           Authorization: "Token " + localStorage.getItem("accessToken"),
         },
       };
-      const resopone = await axios(fetch);
-      setBusStops(resopone.data.busstops)
+      const response = await axios(fetch);
+      setBusStops(response.data.busstops)
+          setBusToEdit({
+            ...busToEdit,
+            busstops: response.data.busstops.map(b=>b._id),
+          });
     } catch (err) {
       setErrorMessage(err.resopone);
     }
