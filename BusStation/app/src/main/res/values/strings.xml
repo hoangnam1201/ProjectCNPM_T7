@@ -2,7 +2,7 @@
     <string name="app_name">BusStation</string>
 <!--    <string name="map_api_key">AIzaSyBVUoPBg-9fIjQiMTgwkHu52PPwjdfmR6M</string>-->
 <!--    <string name="map_api_key">AIzaSyBEADdfs8ZHdOC7DnDs0liTZ154NpW-Hh0</string>-->
-    <string name="map_api_key">AIzaSyAMJ05uDtQPqx9fO2iGBctguzQijPp7a84</string>
+    <string name="map_api_key">AIzaSyBEgWybCD-bHQyijngFYDPQTlt4F7mYpaI</string>
     <string name="Open">NavBar</string>
     <string name="Close">NavBar</string>
     <string name="title_activity_home_main">HomeMain</string>
