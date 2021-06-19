@@ -44,13 +44,17 @@ const BusStopList = () => {
     const busStopList = state.busstop;
     var result = null;
     if (busStopList.length > 0) {
-      console.log(page)
-      console.log(rowsPerPage)
-      result = busStopList
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((busstop) => {
-          return <Row key={busstop._id} busstop={busstop} />;
-        });
+      if (rowsPerPage === -1) {
+        result = busStopList
+          .map((busstop) => {
+            return <Row key={busstop._id} busstop={busstop} />;
+          });
+      } else
+        result = busStopList
+          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          .map((busstop) => {
+            return <Row key={busstop._id} busstop={busstop} />;
+          });
     }
     return result;
   };
@@ -73,7 +77,7 @@ const BusStopList = () => {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "Tất cả", value: -1 }]}
+                rowsPerPageOptions={[5, 10, 25, { label: "Tất cả", value: 100 }]}
                 count={state.busstop.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

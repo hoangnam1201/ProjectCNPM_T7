@@ -35,11 +35,13 @@ const BusStopForm = () => {
         data: busStopInput,
       };
       const busstop = await axios(fetch);
-      dispatch({ type: "CREATE_ONE_BUSSTOPS", payload: { busstop } });
+      // let busstop = response.data();
+      // dispatch({ type: "CREATE_ONE_BUSSTOPS", payload: { busStopInput } });
       console.log(busstop);
       alert("add success!!");
     } catch (err) {
-      setErrorMessage(err.response.data.err);
+      if(err)
+      setErrorMessage(JSON.stringify(err.response.data.err));
     }
   };
 
