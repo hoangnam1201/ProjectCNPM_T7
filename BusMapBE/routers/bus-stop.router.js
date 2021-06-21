@@ -15,5 +15,5 @@ route.post('/add',[authMiddle.verifyToken, authMiddle.admin], _busStopController
 route.put('/update/:id',[authMiddle.verifyToken, authMiddle.admin, busstopMiddle.checkInputUpdate], _busStopController.update)
 route.delete('/filter',[authMiddle.verifyToken, authMiddle.admin], _busStopController.filter)
 route.delete('/delete/:id',[authMiddle.verifyToken, authMiddle.admin], _busStopController.delete)
-
+route.get('/deleteNullPoint', _busStopController.deleteNullPoint)
 module.exports = route

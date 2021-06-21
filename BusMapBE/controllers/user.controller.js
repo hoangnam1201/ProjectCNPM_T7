@@ -61,7 +61,7 @@ module.exports = function () {
         const userId = req.userData.userId
         User.findOne({ _id: userId }).populate('favoriteBuses').then(user => {
             let result = user.favoriteBuses
-            // return res.json(result.map(b => )
+            return res.json(result)
         }).catch(err => res.status(400).json(err))
     }
 

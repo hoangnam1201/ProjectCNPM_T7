@@ -86,14 +86,12 @@ module.exports = function () {
             longitude: req.body.longitude,
             buses: [busesId]
         }
-
         BusStop.create(newBusStop, (err, point) => {
             if (err) return res.status(400).json(err)
             Buses.findById(busesId, (err, buses) => {
                 if (err | buses == null) return res.status(400).json(err ? err : ' id is not exist')
                 let index = buses.busstops.indexOf(BeforBusStopId) + 1;
-                console.log(index)
-                if (index = 0) return res.status(400).json(err ? err : ' befor id is not exist')
+                if (index == 0) return res.status(400).json(err ? err : ' befor id is not exist')
                 Buses.updateOne({ _id: mongoose.Types.ObjectId(busesId) }, {
                     $push: { busstops: { $each: [point._id], $position: index } }
                 }, (err, buses) => {

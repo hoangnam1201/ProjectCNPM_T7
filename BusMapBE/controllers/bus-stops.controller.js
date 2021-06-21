@@ -5,7 +5,7 @@ const mapService = require('../Services/MapService.js')
 const _mapService = new mapService()
 
 const getBusStops = (req, res) => {
-    BusStop.find({}, (err, busstops) => {
+    BusStop.find({ name: { $ne: 'point' } }, (err, busstops) => {
         if (err) {
             res.status(400).json(err)
         } else {
@@ -15,6 +15,12 @@ const getBusStops = (req, res) => {
 }
 
 module.exports = function () {
+    this.deleteNullPoint = (req, res) => {
+        BusStop.find({ name: 'point', buses: { $size: 0 } }).exec((err, busstops) => {
+            if (err) return res.status(400).json(err)
+            return res.json(busstops)
+        })
+    }
     this.getAll = async (req, res) => {
         console.log(_mapService.distanceBetweenPoint(10.99745994471673, 106.87185864560696, 10.997243690317715, 106.87850555965828))
         getBusStops(req, res)
@@ -116,7 +122,7 @@ module.exports = function () {
         }
         BusStop.findOneAndUpdate({ _id: req.params.id }, {
             name: newBusStop.name,
-            locationName: newBusStop.name,
+            locationName: newBusStop.locationName,
             latitude: req.body.latitude,
             longitude: req.body.longitude
         },

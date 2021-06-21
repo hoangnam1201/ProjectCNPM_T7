@@ -30,3 +30,10 @@ Authorization:Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MGFmYWU
 ###
 GET https://busapbe.herokuapp.com/api/busstops/search-name?name=[Q1 031] Bến Bạch Đằng HTTP/1.1
 Authorization:Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MGIwZTU5MzJjMjNiNjAwMjIwZDEzZWIiLCJpYXQiOjE2MjI1NTU5ODQsImV4cCI6MTYyMjU1NjI4NH0.cMxGhv-LOetNC2trq5RVTg_LQH_nTB7XD6kmEntvIao
+
+###
+GET http://localhost:3002/api/busstops/deleteNullPoint HTTP/1.1
+
+###
+GET https://busapbe.herokuapp.com/api/busstops/get-all HTTP/1.1
+Authorization:Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MGFmYWU3NTE2NTAyNjQ2NzA0OTI5ZDQiLCJpYXQiOjE2MjM1NzI5NTEsImV4cCI6MTYyMzY1OTM1MX0.f3xJ1nwNl2lgs3GSEao9oljNzM8XyYYj-4pPDfUCphU
